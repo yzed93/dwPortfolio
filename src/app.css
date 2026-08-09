@@ -59,7 +59,11 @@
 	--color-card-ink: #eff2f8;
 	--color-card-ink-soft: #aab3c5;
 	--color-card-ink-faint: #78849a;
-	--color-card-accent: #db3e70;
+	/*
+		One step lighter than `accent-on-paper`: the same pink only reaches
+		4.23:1 on the raised card surface, which misses AA for body text.
+	*/
+	--color-card-accent: #e04c7b;
 	--color-card-line: #293149;
 
 	--animate-marquee: marquee 28s linear infinite;

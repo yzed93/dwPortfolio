@@ -10,6 +10,9 @@
 	let menuOpen = $state(false);
 	let activeId = $state('');
 	let hasScrolled = $state(false);
+	let menuButton = $state<HTMLButtonElement | null>(null);
+
+	const SECTION_IDS = ['projects', 'skills', 'career', 'project', 'contact'];
 
 	let links = $derived([
 		{ href: '#projects', label: content.nav.projects },
@@ -19,8 +22,21 @@
 		{ href: '#contact', label: content.nav.contact }
 	]);
 
+	function closeMenu(returnFocus = false) {
+		if (!menuOpen) return;
+		menuOpen = false;
+		// Escape must not strand the keyboard on a control that just disappeared.
+		if (returnFocus) menuButton?.focus();
+	}
+
 	function onKeydown(event: KeyboardEvent) {
-		if (event.key === 'Escape') menuOpen = false;
+		if (event.key === 'Escape') closeMenu(true);
+	}
+
+	function onPointerDown(event: PointerEvent) {
+		if (!menuOpen) return;
+		const target = event.target as Node | null;
+		if (target && !(target as Element).closest?.('.site-header')) closeMenu();
 	}
 
 	onMount(() => {
@@ -28,18 +44,23 @@
 		syncScrollState();
 		window.addEventListener('scroll', syncScrollState, { passive: true });
 
-		const ids = ['projects', 'skills', 'career', 'project', 'contact'];
-		const sections = ids
-			.map((id) => document.getElementById(id))
-			.filter((el): el is HTMLElement => el !== null);
+		const sections = SECTION_IDS.map((id) => document.getElementById(id)).filter(
+			(el): el is HTMLElement => el !== null
+		);
 
-		// The band sits just under the nav bar, so whichever section crosses it
-		// is the one the reader is actually looking at.
+		// The band sits just under the nav bar. During a fast scroll two sections
+		// can cross it in the same callback, so visibility is tracked in a set and
+		// the topmost one in document order wins instead of whichever entry the
+		// observer happened to report last.
+		const visible = new Set<string>();
 		const observer = new IntersectionObserver(
 			(entries) => {
 				for (const entry of entries) {
-					if (entry.isIntersecting) activeId = entry.target.id;
+					if (entry.isIntersecting) visible.add(entry.target.id);
+					else visible.delete(entry.target.id);
 				}
+				const first = SECTION_IDS.find((id) => visible.has(id));
+				if (first) activeId = first;
 			},
 			{ rootMargin: '-80px 0px -70% 0px' }
 		);
@@ -51,7 +72,7 @@
 	});
 </script>
 
-<svelte:window on:keydown={onKeydown} />
+<svelte:window on:keydown={onKeydown} on:pointerdown={onPointerDown} />
 
 <header
 	class="site-header fixed inset-x-0 top-0 z-50 border-b {hasScrolled || menuOpen ? 'is-scrolled' : ''}"
@@ -104,6 +125,7 @@
 			</button>
 
 			<button
+				bind:this={menuButton}
 				type="button"
 				onclick={() => (menuOpen = !menuOpen)}
 				aria-expanded={menuOpen}
@@ -126,24 +148,29 @@
 		</div>
 	</div>
 
-	{#if menuOpen}
-		<nav
-			id="mobile-menu"
-			aria-label={langState.current === 'de' ? 'Mobile Navigation' : 'Mobile navigation'}
-			class="site-nav-panel mx-auto max-w-6xl border-t border-b border-ink/12 bg-paper/88 px-4 py-2 backdrop-blur-2xl lg:hidden sm:px-6"
-		>
-			{#each links as link (link.href)}
-				<a
-					href={link.href}
-					onclick={() => (menuOpen = false)}
-					aria-current={link.href === `#${activeId}` ? 'true' : undefined}
-					class="block border-b border-ink/10 py-4 font-[family-name:var(--font-display)] text-xl font-bold text-ink transition-colors last:border-b-0 hover:text-accent-on-paper aria-[current=true]:text-accent-on-paper"
-				>
-					{link.label}
-				</a>
-			{/each}
-		</nav>
-	{/if}
+	<!--
+		Always rendered and hidden with a class rather than mounted on demand:
+		`aria-controls` above has to point at an element that actually exists,
+		otherwise the reference dangles whenever the menu is closed.
+	-->
+	<nav
+		id="mobile-menu"
+		aria-label={langState.current === 'de' ? 'Mobile Navigation' : 'Mobile navigation'}
+		class="site-nav-panel mx-auto max-w-6xl border-t border-b border-ink/12 bg-paper/88 px-4 py-2 backdrop-blur-2xl sm:px-6 lg:hidden {menuOpen
+			? ''
+			: 'hidden'}"
+	>
+		{#each links as link (link.href)}
+			<a
+				href={link.href}
+				onclick={() => closeMenu()}
+				aria-current={link.href === `#${activeId}` ? 'true' : undefined}
+				class="block border-b border-ink/10 py-4 font-[family-name:var(--font-display)] text-xl font-bold text-ink transition-colors last:border-b-0 hover:text-accent-on-paper aria-[current=true]:text-accent-on-paper"
+			>
+				{link.label}
+			</a>
+		{/each}
+	</nav>
 </header>
 
 <style>
