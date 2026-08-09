@@ -12,21 +12,30 @@
 	import Contact from '$lib/components/Contact.svelte';
 
 	let content = $derived(contentFor(langState.current));
+
+	/*
+		The pages are prerendered, so `page.url.origin` is the build-time
+		placeholder `http://sveltekit-prerender` in the emitted HTML. Link preview
+		crawlers do not run JavaScript and would read exactly that, so canonical
+		and social URLs are pinned to the real site instead.
+	*/
+	const SITE_URL = 'https://dennis.wiredu.cloud';
+	let canonical = $derived(`${SITE_URL}${page.url.pathname}`);
+	const ogImage = `${SITE_URL}/images/portfolio-og.jpg`;
 </script>
 
 <svelte:head>
 	<title>{content.meta.title}</title>
 	<meta name="description" content={content.meta.description} />
-	<link rel="canonical" href={page.url.href} />
+	<link rel="canonical" href={canonical} />
 
-	<!-- The request origin keeps canonical and social URLs absolute in every environment. -->
 	<meta property="og:type" content="profile" />
 	<meta property="og:site_name" content="Dennis Wiredu" />
 	<meta property="og:title" content={content.meta.title} />
 	<meta property="og:description" content={content.meta.description} />
 	<meta property="og:locale" content={langState.current === 'de' ? 'de_DE' : 'en_US'} />
-	<meta property="og:url" content={page.url.href} />
-	<meta property="og:image" content={`${page.url.origin}/images/portfolio-og.jpg`} />
+	<meta property="og:url" content={canonical} />
+	<meta property="og:image" content={ogImage} />
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
 	<meta
@@ -38,7 +47,7 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={content.meta.title} />
 	<meta name="twitter:description" content={content.meta.description} />
-	<meta name="twitter:image" content={`${page.url.origin}/images/portfolio-og.jpg`} />
+	<meta name="twitter:image" content={ogImage} />
 </svelte:head>
 
 <a

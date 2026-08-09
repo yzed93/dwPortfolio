@@ -90,7 +90,7 @@ export const de: SiteContent = {
 		name: 'Dennis Wiredu',
 		role: 'Citrix Plattform & Cloud Engineer',
 		tagline:
-			'Baue und betreibe Virtualisierungs- und Cloud-Plattformen für bis zu 15.000 Nutzer und entwickle nebenbei produktiv Software.',
+			'Ich baue und betreibe Virtualisierungs- und Cloud-Plattformen für bis zu 15.000 Nutzer. Daneben entwickle ich eigene Software, die im echten Einsatz läuft.',
 		cta: 'Kontakt aufnehmen',
 		ctaSecondary: 'Werdegang ansehen'
 	},
@@ -144,7 +144,7 @@ export const de: SiteContent = {
 	projects: {
 		title: 'Aktuelle Projekte',
 		intro:
-			'Ausgewählte Projekte von Konzeption bis Betrieb für Umgebungen zwischen 700 und 15.000+ Nutzern.',
+			'Ausgewählte Projekte von der Konzeption bis zum laufenden Betrieb, für Umgebungen mit 700 bis über 15.000 Nutzern.',
 		items: [
 			{
 				id: 'automotive',
@@ -158,7 +158,7 @@ export const de: SiteContent = {
 					'Automatisierung wiederkehrender Citrix-Betriebsprozesse via PowerShell',
 					'PVS Image Management: Golden-Image-Lifecycle für über 15.000 Nutzer',
 					'Planung und Umsetzung eines Major-Upgrades der Citrix-Infrastruktur',
-					'Aufbau von Monitoring mit Nagios, Ivanti-Personalisierungsrichtlinien',
+					'Aufbau des Monitorings mit Nagios sowie Pflege der Ivanti-Personalisierungsrichtlinien',
 					'2nd & 3rd Level Support, technische Dokumentation und SOPs'
 				]
 			},
@@ -168,7 +168,7 @@ export const de: SiteContent = {
 				sector: 'Non-Profit',
 				period: '03/2025 - heute',
 				scale: 'ca. 700 Nutzer',
-				summary: 'Vollständiger Neuaufbau einer CVAD-Plattform, von Architektur bis Go-live.',
+				summary: 'Kompletter Neuaufbau einer CVAD-Plattform, von der Architektur bis zum Go-live.',
 				bullets: [
 					'Vollständiger Neuaufbau einer CVAD-Plattform: Architektur, Dimensionierung, Konfiguration',
 					'Design der Betriebs-, Deployment- und Freigabeprozesse',
@@ -206,7 +206,7 @@ export const de: SiteContent = {
 	career: {
 		title: 'Werdegang',
 		intro:
-			'Acht Stationen in München, vom kaufmännischen Einstieg bis zum Citrix Consultant. Auf der Karte anklicken für Details.',
+			'Acht Stationen in München, vom kaufmännischen Einstieg bis zum Citrix Consultant. Für Details auf einen Punkt in der Karte klicken.',
 		stations: [
 			{
 				id: 'hausladen',
@@ -227,7 +227,7 @@ export const de: SiteContent = {
 				period: '12/2014 - 09/2015',
 				lat: 48.1268,
 				lng: 11.5602,
-				summary: 'Einkauf im Onlinehandel für Consumer-Elektronik.',
+				summary: 'Einkauf bei einem Online-Händler für Unterhaltungselektronik.',
 				bullets: ['Einkauf und Lieferantenkommunikation im Elektronikhandel']
 			},
 			{
@@ -238,8 +238,8 @@ export const de: SiteContent = {
 				period: '10/2015 - 12/2016',
 				lat: 48.1655,
 				lng: 11.5395,
-				summary: 'Verantwortung für den Einkauf, letzte Station vor dem Wechsel in die IT.',
-				bullets: ['Einkauf und Lieferantenmanagement', 'Abschluss der kaufmännischen Laufbahn']
+				summary: 'Verantwortung für den gesamten Einkauf, die letzte Station vor dem Wechsel in die IT.',
+				bullets: ['Einkauf und Betreuung der Lieferanten']
 			},
 			{
 				id: 'bos',
@@ -249,7 +249,7 @@ export const de: SiteContent = {
 				period: '2017 - 2019',
 				lat: 48.1301,
 				lng: 11.5104,
-				summary: 'Zweiter Bildungsweg zur allgemeinen Hochschulreife und Start der Neuorientierung.',
+				summary: 'Abitur auf dem zweiten Bildungsweg, der Anfang des Wechsels in die IT.',
 				bullets: ['Allgemeine Hochschulreife über den zweiten Bildungsweg']
 			},
 			{
@@ -261,10 +261,10 @@ export const de: SiteContent = {
 				lat: 48.1508,
 				lng: 11.5802,
 				summary:
-					'Schwerpunkt Mensch-Maschine-Interaktion, zugunsten des Einstiegs in die IT-Beratung beendet.',
+					'Schwerpunkt Mensch-Maschine-Interaktion. Abgebrochen, um in die IT-Beratung einzusteigen.',
 				bullets: [
 					'Fünf Semester Medieninformatik mit Schwerpunkt Mensch-Maschine-Interaktion',
-					'Studium zugunsten des Einstiegs in die IT-Beratung beendet'
+					'Ohne Abschluss beendet, um in die IT-Beratung einzusteigen'
 				]
 			},
 			{
@@ -275,7 +275,7 @@ export const de: SiteContent = {
 				period: '08/2021 - 07/2022',
 				lat: 48.142,
 				lng: 11.5335,
-				summary: 'Pflege der Netzwerkinfrastruktur und internen Services eines IT-Dienstleisters.',
+				summary: 'Betreuung der Netzwerkinfrastruktur und der internen Dienste eines IT-Dienstleisters.',
 				bullets: [
 					'Pflege interner Services: Microsoft 365, SharePoint, Teams, VoIP, openLDAP, Linux-Webserver',
 					'Monitoring der Server- und Serviceinfrastruktur mit Zabbix',
@@ -292,7 +292,7 @@ export const de: SiteContent = {
 				period: '08/2022 - 01/2023',
 				lat: 48.133,
 				lng: 11.5585,
-				summary: 'IT-Support beim größten europäischen Wissenschaftskanal auf YouTube.',
+				summary: 'IT-Support beim größten Wissenschaftskanal Europas auf YouTube.',
 				bullets: [
 					'Technisches On- und Offboarding neuer Mitarbeitender',
 					'Interner IT-Support und administrative Unterstützung bei VR-Themen',
@@ -321,9 +321,9 @@ export const de: SiteContent = {
 	project: {
 		title: 'Eigenes Projekt',
 		name: 'Tabiyume',
-		tagline: 'Reiseplanungs-Anwendung',
+		tagline: 'App zur Reiseplanung',
 		description:
-			'Solo-Projekt, vollständig eigenständig konzipiert, entwickelt und deployed. Offline-first mit Cloud-Sync, Echtzeit-Kollaboration und interaktiver Kartenintegration.',
+			'Allein umgesetzt, von der Idee bis zum Deployment. Funktioniert offline, gleicht sich mit der Cloud ab und erlaubt gemeinsames Planen in Echtzeit auf einer interaktiven Karte.',
 		stack: [
 			'SvelteKit 5',
 			'TypeScript (strict)',
@@ -426,7 +426,7 @@ export const en: SiteContent = {
 	projects: {
 		title: 'Latest Projects',
 		intro:
-			'Selected projects spanning concept through operations for environments between 700 and 15,000+ users.',
+			'Selected projects, from first concept through to day-to-day operations, for environments of 700 to over 15,000 users.',
 		items: [
 			{
 				id: 'automotive',
@@ -439,7 +439,7 @@ export const en: SiteContent = {
 					'Automated recurring Citrix operations processes via PowerShell',
 					'PVS image management: golden-image lifecycle for 15,000+ users',
 					'Planned and executed a major upgrade of the Citrix infrastructure',
-					'Built monitoring with Nagios, managed Ivanti personalization policies',
+					'Built monitoring with Nagios and maintained the Ivanti personalization policies',
 					'2nd & 3rd level support, technical documentation and SOPs'
 				]
 			},
@@ -487,7 +487,7 @@ export const en: SiteContent = {
 	career: {
 		title: 'Career',
 		intro:
-			'Eight stops in Munich, from a commercial start to Citrix consultant. Click a pin on the map for details.',
+			'Eight stops in Munich, from a commercial apprenticeship to Citrix consultant. Click a pin on the map for details.',
 		stations: [
 			{
 				id: 'hausladen',
@@ -508,7 +508,7 @@ export const en: SiteContent = {
 				period: '12/2014 - 09/2015',
 				lat: 48.1268,
 				lng: 11.5602,
-				summary: 'Purchasing for an online consumer electronics retailer.',
+				summary: 'Purchasing for an online consumer electronics retailer, from sourcing to supplier contact.',
 				bullets: ['Purchasing and supplier communication in electronics retail']
 			},
 			{
@@ -519,8 +519,8 @@ export const en: SiteContent = {
 				period: '10/2015 - 12/2016',
 				lat: 48.1655,
 				lng: 11.5395,
-				summary: 'Owned purchasing, the last role before moving into IT.',
-				bullets: ['Purchasing and supplier management', 'End of the commercial career track']
+				summary: 'Ran purchasing end to end, the last role before moving into IT.',
+				bullets: ['Purchasing and supplier relationships']
 			},
 			{
 				id: 'bos',
@@ -531,7 +531,7 @@ export const en: SiteContent = {
 				lat: 48.1301,
 				lng: 11.5104,
 				summary:
-					'Second-chance route to a university entrance qualification and the start of the switch.',
+					'Evening school route to a university entrance qualification, where the move into IT began.',
 				bullets: ['General higher education entrance qualification via the second-chance route']
 			},
 			{
@@ -543,10 +543,10 @@ export const en: SiteContent = {
 				lat: 48.1508,
 				lng: 11.5802,
 				summary:
-					'Focus on human-computer interaction, left in favor of starting in IT consulting.',
+					'Focused on human-computer interaction. Left before finishing to start in IT consulting.',
 				bullets: [
 					'Five semesters of media informatics with a focus on human-computer interaction',
-					'Left in favor of starting in IT consulting'
+					'Left before finishing to start in IT consulting'
 				]
 			},
 			{
@@ -574,7 +574,7 @@ export const en: SiteContent = {
 				period: '08/2022 - 01/2023',
 				lat: 48.133,
 				lng: 11.5585,
-				summary: "IT support at Europe's largest science channel on YouTube.",
+				summary: "IT support at Europe's biggest science channel on YouTube.",
 				bullets: [
 					'Technical on- and offboarding of new employees',
 					'Internal IT support and administrative support for VR projects',
@@ -601,11 +601,11 @@ export const en: SiteContent = {
 		]
 	},
 	project: {
-		title: 'Own project',
+		title: 'Side project',
 		name: 'Tabiyume',
 		tagline: 'Trip-planning app',
 		description:
-			'A solo project, fully self-designed, built, and deployed. Offline-first with cloud sync, real-time collaboration, and interactive map integration.',
+			'Built entirely on my own, from the first idea to deployment. It works offline, syncs to the cloud, and lets people plan together in real time on an interactive map.',
 		stack: [
 			'SvelteKit 5',
 			'TypeScript (strict)',
