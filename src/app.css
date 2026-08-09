@@ -1,0 +1,211 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource/space-grotesk/400.css';
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/600.css';
+@import '@fontsource/space-grotesk/700.css';
+
+/*
+	Dark is the default here; `[data-theme='light']` below is the alternative,
+	served by the /light route for comparison.
+
+	Plain `@theme` on purpose, not `@theme inline`: inline bakes the literal
+	values into every utility, which would make those overrides do nothing.
+
+	Surface pairs
+	  paper / ink   invert between themes. `paper` is always the page, `ink` is
+	                always the opposite surface, so `bg-ink` blocks read as light
+	                cards on the dark theme and dark cards on the light one.
+
+	Accent tokens are named after the surface they sit on, because the readable
+	shade of the bordeaux differs per surface and flips with the theme:
+	  signal            the bordeaux fill itself, identical in both themes
+	  on-signal         text drawn on that fill (pale, 9.9:1)
+	  accent-on-paper   accent text on the page background
+	  accent-on-ink     accent text on an `ink` card
+*/
+@theme {
+	--font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+	/* Ink-blue neutrals keep the page cool and let bordeaux remain the accent. */
+	--color-paper: #070a14;
+	--color-paper-raised: #111626;
+	--color-ink: #eff2f8;
+	--color-ink-soft: #aab3c5;
+	--color-ink-faint: #78849a;
+	--color-line: #293149;
+
+	/*
+		Bordeaux is dark, so unlike a bright accent it carries LIGHT text when
+		used as a fill. That is why `on-signal` is the pale tone.
+	*/
+	--color-signal: #701a38;
+	--color-on-signal: #f7eef2;
+	--color-accent-on-paper: #c45678;
+	--color-accent-on-ink: #701a38;
+	--color-hero-wine: #701a38;
+	--color-hero-wine-light: #b23a60;
+	--color-hero-blue: #0b2450;
+	--color-hero-blue-light: #2d5d9a;
+
+	/*
+		Content cards follow the page theme. In dark mode they stay inside the
+		ink-blue surface family rather than interrupting it with pale cards.
+	*/
+	--color-card: #111626;
+	--color-card-border: #293149;
+	--color-card-ink: #eff2f8;
+	--color-card-ink-soft: #aab3c5;
+	--color-card-ink-faint: #78849a;
+	--color-card-accent: #c45678;
+	--color-card-line: #293149;
+
+	--animate-marquee: marquee 28s linear infinite;
+}
+
+[data-theme='light'] {
+	--color-paper: #f4f6fa;
+	--color-paper-raised: #e9edf4;
+	--color-ink: #0b1020;
+	--color-ink-soft: #45516a;
+	--color-ink-faint: #66728a;
+	--color-line: #ccd4e1;
+
+	/*
+		The accent flips with the surface: deep bordeaux where the background is
+		light, pale bordeaux where it is dark. The signal fill itself stays put.
+	*/
+	--color-accent-on-paper: #701a38;
+	--color-accent-on-ink: #d06b8a;
+
+	--color-card: #f4f6fa;
+	--color-card-border: #293149;
+	--color-card-ink: #0b1020;
+	--color-card-ink-soft: #45516a;
+	--color-card-ink-faint: #66728a;
+	--color-card-accent: #701a38;
+	--color-card-line: #ccd4e1;
+}
+
+html {
+	color-scheme: dark;
+}
+
+html[data-theme='light'] {
+	color-scheme: light;
+}
+
+body {
+	background:
+		radial-gradient(
+			circle at 8% 24%,
+			color-mix(in srgb, var(--color-hero-wine) 15%, transparent) 0,
+			transparent 30rem
+		),
+		radial-gradient(
+			circle at 92% 62%,
+			color-mix(in srgb, var(--color-hero-blue-light) 12%, transparent) 0,
+			transparent 34rem
+		),
+		var(--color-paper);
+	color: var(--color-ink);
+	font-family: var(--font-sans);
+	-webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+	text-wrap: balance;
+}
+
+p,
+li {
+	text-wrap: pretty;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+:focus-visible {
+	outline: 3px solid var(--color-accent-on-paper);
+	outline-offset: 4px;
+}
+
+/* One geometric vocabulary derived from the facets in the hero object. */
+.facet-rise {
+	clip-path: polygon(0 var(--facet-cut), 100% 0, 100% 100%, 0 100%);
+}
+
+.facet-fall {
+	clip-path: polygon(0 0, 100% var(--facet-cut), 100% calc(100% - var(--facet-cut)), 0 100%);
+}
+
+.facet-card {
+	clip-path: polygon(
+		0 var(--facet-notch),
+		var(--facet-notch) 0,
+		100% 0,
+		100% calc(100% - var(--facet-notch)),
+		calc(100% - var(--facet-notch)) 100%,
+		0 100%
+	);
+}
+
+:root {
+	--facet-cut: clamp(1.5rem, 3vw, 2.75rem);
+	--facet-notch: 1rem;
+}
+
+@media (max-width: 767px) {
+	:root {
+		--facet-cut: 1rem;
+		--facet-notch: 0.7rem;
+	}
+}
+
+.reveal {
+	opacity: 0;
+	transform: translateY(28px);
+	transition:
+		opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+		transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+@keyframes marquee {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
+	}
+	.reveal {
+		opacity: 1 !important;
+		transform: none !important;
+	}
+}
+
+@media (prefers-reduced-transparency: reduce) {
+	.site-nav-panel {
+		background: var(--color-paper);
+		backdrop-filter: none;
+	}
+}
