@@ -41,12 +41,12 @@
 		Bordeaux is dark, so unlike a bright accent it carries LIGHT text when
 		used as a fill. That is why `on-signal` is the pale tone.
 	*/
-	--color-signal: #701a38;
+	--color-signal: #7a143a;
 	--color-on-signal: #f7eef2;
-	--color-accent-on-paper: #c45678;
-	--color-accent-on-ink: #701a38;
-	--color-hero-wine: #701a38;
-	--color-hero-wine-light: #b23a60;
+	--color-accent-on-paper: #db3e70;
+	--color-accent-on-ink: #7a143a;
+	--color-hero-wine: #7a143a;
+	--color-hero-wine-light: #bd2052;
 	--color-hero-blue: #0b2450;
 	--color-hero-blue-light: #2d5d9a;
 
@@ -59,7 +59,7 @@
 	--color-card-ink: #eff2f8;
 	--color-card-ink-soft: #aab3c5;
 	--color-card-ink-faint: #78849a;
-	--color-card-accent: #c45678;
+	--color-card-accent: #db3e70;
 	--color-card-line: #293149;
 
 	--animate-marquee: marquee 28s linear infinite;
@@ -77,15 +77,15 @@
 		The accent flips with the surface: deep bordeaux where the background is
 		light, pale bordeaux where it is dark. The signal fill itself stays put.
 	*/
-	--color-accent-on-paper: #701a38;
-	--color-accent-on-ink: #d06b8a;
+	--color-accent-on-paper: #7a143a;
+	--color-accent-on-ink: #db3e70;
 
 	--color-card: #f4f6fa;
 	--color-card-border: #293149;
 	--color-card-ink: #0b1020;
 	--color-card-ink-soft: #45516a;
 	--color-card-ink-faint: #66728a;
-	--color-card-accent: #701a38;
+	--color-card-accent: #7a143a;
 	--color-card-line: #ccd4e1;
 }
 

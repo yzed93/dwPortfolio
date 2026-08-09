@@ -9,6 +9,7 @@
 
 	let menuOpen = $state(false);
 	let activeId = $state('');
+	let hasScrolled = $state(false);
 
 	let links = $derived([
 		{ href: '#projects', label: content.nav.projects },
@@ -23,6 +24,10 @@
 	}
 
 	onMount(() => {
+		const syncScrollState = () => (hasScrolled = window.scrollY > 12);
+		syncScrollState();
+		window.addEventListener('scroll', syncScrollState, { passive: true });
+
 		const ids = ['projects', 'skills', 'career', 'project', 'contact'];
 		const sections = ids
 			.map((id) => document.getElementById(id))
@@ -39,13 +44,18 @@
 			{ rootMargin: '-80px 0px -70% 0px' }
 		);
 		sections.forEach((section) => observer.observe(section));
-		return () => observer.disconnect();
+		return () => {
+			observer.disconnect();
+			window.removeEventListener('scroll', syncScrollState);
+		};
 	});
 </script>
 
 <svelte:window on:keydown={onKeydown} />
 
-<header class="fixed inset-x-0 top-0 z-50 border-b border-ink/12 bg-paper/88 backdrop-blur-xl">
+<header
+	class="site-header fixed inset-x-0 top-0 z-50 border-b {hasScrolled || menuOpen ? 'is-scrolled' : ''}"
+>
 	<div
 		class="site-nav-panel mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"
 	>
@@ -54,15 +64,9 @@
 			aria-label={langState.current === 'de'
 				? 'Dennis Wiredu - zurück zum Anfang'
 				: 'Dennis Wiredu - back to top'}
-			class="group flex min-h-11 items-center gap-2.5 text-ink"
+			class="group flex min-h-11 items-center font-[family-name:var(--font-display)] text-xl font-extrabold tracking-[-0.045em] text-ink"
 		>
-			<span
-				class="flex h-9 w-9 items-center justify-center rounded-md bg-ink font-[family-name:var(--font-display)] text-sm font-extrabold tracking-tight text-paper transition-transform duration-300 group-hover:-rotate-3"
-				aria-hidden="true">DW</span
-			>
-			<span class="hidden font-[family-name:var(--font-display)] text-sm font-bold sm:inline">
-				Dennis Wiredu
-			</span>
+			<span>Dennis <span class="wordmark-accent text-accent-on-paper">Wiredu</span></span>
 		</a>
 
 		<nav
@@ -89,11 +93,11 @@
 			{/each}
 		</nav>
 
-		<div class="flex items-center gap-1.5">
+		<div class="flex items-center gap-1 border-l border-ink/15 pl-2 sm:pl-3">
 			<button
 				type="button"
 				onclick={() => langState.toggle()}
-				class="flex h-10 min-w-10 items-center justify-center rounded-md border border-ink/15 px-3 text-xs font-semibold text-ink transition-colors hover:border-accent-on-paper hover:bg-ink/5 hover:text-accent-on-paper active:scale-[0.98]"
+				class="flex h-10 min-w-10 items-center justify-center px-2 text-xs font-bold tracking-[0.14em] text-ink transition-colors hover:text-accent-on-paper active:scale-[0.98]"
 				aria-label={langState.current === 'de' ? 'Switch to English' : 'Auf Deutsch wechseln'}
 			>
 				{langState.current === 'de' ? 'EN' : 'DE'}
@@ -111,7 +115,7 @@
 					: menuOpen
 						? 'Close menu'
 						: 'Open menu'}
-				class="flex h-10 w-10 items-center justify-center rounded-md text-ink transition-colors hover:bg-ink/10 active:scale-[0.98] lg:hidden"
+				class="flex h-10 w-10 items-center justify-center text-ink transition-colors hover:text-accent-on-paper active:scale-[0.98] lg:hidden"
 			>
 				{#if menuOpen}
 					<X size={20} weight="bold" />
@@ -126,14 +130,14 @@
 		<nav
 			id="mobile-menu"
 			aria-label={langState.current === 'de' ? 'Mobile Navigation' : 'Mobile navigation'}
-			class="site-nav-panel mx-auto max-w-6xl border-x border-b border-ink/12 bg-paper/96 p-3 backdrop-blur-xl lg:hidden"
+			class="site-nav-panel mx-auto max-w-6xl border-t border-b border-ink/12 bg-paper/88 px-4 py-2 backdrop-blur-2xl lg:hidden sm:px-6"
 		>
 			{#each links as link (link.href)}
 				<a
 					href={link.href}
 					onclick={() => (menuOpen = false)}
 					aria-current={link.href === `#${activeId}` ? 'true' : undefined}
-					class="block rounded-md px-4 py-3 font-[family-name:var(--font-display)] text-xl font-bold text-ink transition-colors hover:bg-ink/5 aria-[current=true]:bg-ink/7 aria-[current=true]:text-accent-on-paper"
+					class="block border-b border-ink/10 py-4 font-[family-name:var(--font-display)] text-xl font-bold text-ink transition-colors last:border-b-0 hover:text-accent-on-paper aria-[current=true]:text-accent-on-paper"
 				>
 					{link.label}
 				</a>
@@ -141,3 +145,40 @@
 		</nav>
 	{/if}
 </header>
+
+<style>
+	.site-header {
+		border-bottom-color: transparent;
+		background: transparent;
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+		transition:
+			background-color 240ms ease,
+			border-color 240ms ease,
+			backdrop-filter 240ms ease;
+	}
+	.site-header.is-scrolled {
+		border-bottom-color: color-mix(in srgb, var(--color-ink) 15%, transparent);
+		background: color-mix(in srgb, var(--color-paper) 52%, transparent);
+		-webkit-backdrop-filter: blur(16px) saturate(1.2);
+		backdrop-filter: blur(16px) saturate(1.2);
+	}
+	.wordmark-accent {
+		text-decoration: underline;
+		text-decoration-color: var(--color-signal);
+		text-decoration-thickness: 0.16em;
+		text-underline-offset: 0.2em;
+		transition:
+			color 180ms ease,
+			text-decoration-color 180ms ease;
+	}
+	.group:hover .wordmark-accent {
+		color: var(--color-ink);
+		text-decoration-color: var(--color-accent-on-paper);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.site-header {
+			transition: none;
+		}
+	}
+</style>
