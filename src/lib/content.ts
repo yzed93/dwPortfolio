@@ -69,11 +69,7 @@ export type SiteContent = {
 	};
 	contact: {
 		title: string;
-		description: string;
 		email: string;
-		cta: string;
-		copied: string;
-		copyFailed: string;
 	};
 };
 
@@ -355,12 +351,7 @@ export const de: SiteContent = {
 	},
 	contact: {
 		title: 'Kontakt',
-		description:
-			'Offen für neue Projekte im Cloud- und Virtualisierungs-Umfeld oder in der Software-Entwicklung.',
-		email: 'dennis.wiredu@yahoo.de',
-		cta: 'E-Mail kopieren',
-		copied: 'E-Mail kopiert',
-		copyFailed: 'Kopieren nicht möglich'
+		email: 'dennis@wiredu.cloud'
 	}
 };
 
@@ -642,11 +633,7 @@ export const en: SiteContent = {
 	},
 	contact: {
 		title: 'Contact',
-		description: 'Open to new projects in cloud and virtualization, or in software development.',
-		email: 'dennis.wiredu@yahoo.de',
-		cta: 'Copy email',
-		copied: 'Email copied',
-		copyFailed: 'Could not copy email'
+		email: 'dennis@wiredu.cloud'
 	}
 };
 

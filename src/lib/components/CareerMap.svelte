@@ -28,6 +28,7 @@
 	let commercialStations = $derived(
 		content.career.stations.filter((s) => s.track === 'commercial').reverse()
 	);
+	let mobileStations = $derived([...content.career.stations].reverse());
 
 	function chipClass(station: Station) {
 		if (selectedId === station.id) return 'border-on-signal bg-on-signal text-signal';
@@ -85,6 +86,8 @@
 	onMount(() => {
 		let cancelled = false;
 		let loadStarted = false;
+		let observer: IntersectionObserver | null = null;
+		const desktopMedia = window.matchMedia('(min-width: 768px)');
 
 		async function loadMap() {
 			if (loadStarted) return;
@@ -109,21 +112,37 @@
 			});
 		}
 
-		// MapLibre is one of the largest dependencies on the page. Load it shortly
-		// before the map reaches the viewport instead of competing with the hero.
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (!entry.isIntersecting) return;
-				observer.disconnect();
-				void loadMap();
-			},
-			{ rootMargin: '320px 0px' }
-		);
-		observer.observe(mapContainer);
+		// The mobile experience is a swipeable CV and never needs the heavy map.
+		// On desktop, keep loading MapLibre shortly before the workspace appears.
+		function observeMap() {
+			if (!desktopMedia.matches || observer || loadStarted || !mapContainer) return;
+			observer = new IntersectionObserver(
+				([entry]) => {
+					if (!entry.isIntersecting) return;
+					observer?.disconnect();
+					observer = null;
+					void loadMap();
+				},
+				{ rootMargin: '320px 0px' }
+			);
+			observer.observe(mapContainer);
+		}
+
+		const handleViewportChange = () => {
+			if (!desktopMedia.matches) {
+				observer?.disconnect();
+				observer = null;
+				return;
+			}
+			observeMap();
+		};
+		observeMap();
+		desktopMedia.addEventListener('change', handleViewportChange);
 
 		return () => {
 			cancelled = true;
-			observer.disconnect();
+			observer?.disconnect();
+			desktopMedia.removeEventListener('change', handleViewportChange);
 		};
 	});
 
@@ -143,8 +162,42 @@
 		</h2>
 		<p class="mt-3 max-w-[58ch] text-lg font-medium text-on-signal">{content.career.intro}</p>
 
-		<!-- The rule between the two chip groups carries the career change. -->
-		<div class="mt-8 flex flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-5">
+		<div
+			class="career-swipe -mx-6 mt-8 snap-x snap-mandatory scroll-px-6 overflow-x-auto overscroll-x-contain px-6 pb-3 touch-pan-x md:hidden"
+			aria-label={content.career.title}
+		>
+			<div class="flex gap-4">
+				{#each mobileStations as station (station.id)}
+					<article class="facet-card w-[84vw] max-w-[21rem] shrink-0 snap-start bg-card p-6">
+						<div class="flex items-start justify-between gap-4 border-b border-card-line pb-4">
+							<h3
+								class="font-[family-name:var(--font-display)] text-2xl font-bold leading-tight text-card-ink"
+							>
+								{station.company}
+							</h3>
+							<span class="shrink-0 pt-1 text-xs font-medium text-card-ink-faint">
+								{station.period}
+							</span>
+						</div>
+						<p class="mt-4 font-semibold text-card-accent">{station.role}</p>
+						<p class="mt-3 text-sm leading-relaxed text-card-ink-soft">{station.summary}</p>
+
+						<ul class="mt-5 space-y-2.5">
+							{#each station.bullets as bullet (bullet)}
+								<li class="flex gap-2.5 text-sm leading-relaxed text-card-ink-soft">
+									<span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-card-accent"></span>
+									{bullet}
+								</li>
+							{/each}
+						</ul>
+					</article>
+				{/each}
+			</div>
+		</div>
+
+		<div class="hidden md:block">
+			<!-- The rule between the two chip groups carries the career change. -->
+			<div class="mt-8 flex flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-5">
 			<div class="flex flex-wrap gap-2 lg:max-w-[58%]">
 				{#each itStations as station (station.id)}
 					<button
@@ -179,9 +232,9 @@
 					</button>
 				{/each}
 			</div>
-		</div>
+			</div>
 
-		<div class="mt-8 grid overflow-hidden border border-on-signal/20 bg-card lg:grid-cols-[1.1fr_1fr]">
+			<div class="mt-8 grid overflow-hidden border border-on-signal/20 bg-card lg:grid-cols-[1.1fr_1fr]">
 			<div
 				use:reveal
 				class="relative border-b border-card-line lg:border-r lg:border-b-0"
@@ -237,11 +290,20 @@
 					</div>
 				{/key}
 			</div>
+			</div>
 		</div>
 	</div>
 </section>
 
 <style>
+	.career-swipe {
+		scrollbar-width: none;
+		-webkit-overflow-scrolling: touch;
+	}
+	.career-swipe::-webkit-scrollbar {
+		display: none;
+	}
+
 	/*
 		Pin shape is a rotated rounded square, so every transform has to keep the
 		45deg rotation. Hollow = the years before IT, filled = the IT career.

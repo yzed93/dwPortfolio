@@ -33,7 +33,7 @@
 					href={content.project.link}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="mt-8 inline-flex items-center gap-2 rounded-md bg-signal px-6 py-3 text-sm font-semibold text-on-signal transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
+					class="mt-8 inline-flex items-center gap-2 rounded-lg bg-signal px-6 py-3 text-sm font-semibold text-on-signal transition-transform hover:-translate-y-0.5 active:scale-[0.98]"
 				>
 					{content.project.cta} →
 				</a>
@@ -44,7 +44,7 @@
 				href={content.project.link}
 				target="_blank"
 				rel="noopener noreferrer"
-				class="facet-card group relative block overflow-hidden bg-paper drop-shadow-[0_28px_60px_color-mix(in_srgb,var(--color-signal)_22%,transparent)]"
+				class="case-study-visual facet-card group relative block overflow-hidden bg-paper drop-shadow-[0_28px_60px_color-mix(in_srgb,var(--color-signal)_22%,transparent)]"
 				aria-label={content.project.cta}
 			>
 				<img
@@ -60,3 +60,35 @@
 		</div>
 	</div>
 </section>
+
+<style>
+	.case-study-visual::after {
+		position: absolute;
+		inset: -45%;
+		content: '';
+		pointer-events: none;
+		background: linear-gradient(
+			112deg,
+			transparent 38%,
+			color-mix(in srgb, var(--color-on-signal) 18%, transparent) 49%,
+			transparent 60%
+		);
+		opacity: 0;
+		transform: translateX(-48%);
+		transition:
+			transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+			opacity 0.25s ease;
+	}
+
+	.case-study-visual:hover::after,
+	.case-study-visual:focus-visible::after {
+		opacity: 1;
+		transform: translateX(48%);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.case-study-visual::after {
+			display: none;
+		}
+	}
+</style>

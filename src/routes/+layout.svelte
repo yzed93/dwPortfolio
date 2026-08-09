@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
 	import { langState } from '$lib/state/lang.svelte';
 
 	let { children } = $props();
@@ -11,9 +10,5 @@
 		document.documentElement.lang = langState.current;
 	});
 </script>
-
-<svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head>
 
 {@render children()}
