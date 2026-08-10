@@ -2,6 +2,7 @@
 	import type { SiteContent } from '$lib/content';
 	import { reveal } from '$lib/actions/reveal';
 	import CareerField from './CareerField.svelte';
+	import CaretDown from 'phosphor-svelte/lib/CaretDown';
 
 	let { content }: { content: SiteContent } = $props();
 
@@ -46,7 +47,11 @@
 			<ol class="relative">
 				{#each stations as station, i (station.id)}
 					{@const isCurrent = i === stations.length - 1}
-					<li use:reveal={Math.min(i, 4) * 60} class="relative pb-9 pl-8 last:pb-0 sm:pl-10">
+					<li
+						use:reveal={Math.min(i, 4) * 60}
+						class="station relative pb-9 pl-8 sm:pl-10"
+						class:is-open-ended={isCurrent}
+					>
 						<span
 							class="axis-line absolute top-2 bottom-0 left-0 w-px {station.track === 'it'
 								? 'is-solid'
@@ -54,7 +59,7 @@
 							aria-hidden="true"
 						></span>
 						<span
-							class="absolute top-[0.4rem] left-0 h-2 w-2 -translate-x-1/2 rounded-full {station.track ===
+							class="station-node absolute top-[0.4rem] left-0 h-2 w-2 -translate-x-1/2 rounded-full {station.track ===
 							'it'
 								? 'bg-accent-on-paper'
 								: 'bg-ink-faint'}"
@@ -76,16 +81,32 @@
 							<p class="meta mt-1 text-ink-faint">{station.period}</p>
 							<p class="mt-3 max-w-[60ch] leading-relaxed text-ink-soft">{station.summary}</p>
 
-							{#if isCurrent}
-								<!-- Only the current role gets its detail on the axis. Everything
-								     else stays at one line, which is what keeps this scannable. -->
-								<ul class="mt-4 space-y-2">
-									{#each station.bullets as bullet (bullet)}
-										<li class="rule-item max-w-[60ch] text-sm leading-relaxed text-ink-soft">
-											{bullet}
-										</li>
-									{/each}
-								</ul>
+							<!--
+								Four of the eight stations carry detail beyond their one-line
+								summary, and until now it was written in the content file and
+								never rendered. Rather than pasting it all onto the axis and
+								losing the scan, it opens on request. The current role starts
+								open, because it is the one a reader came for.
+
+								Native details, so the keyboard, screen readers and a
+								no-JavaScript load all get it without anything being wired up.
+							-->
+							{#if station.bullets.length > 1}
+								<details class="station-detail mt-4" open={isCurrent}>
+									<summary class="meta inline-flex min-h-11 cursor-pointer items-center gap-2 text-ink-faint">
+										<span class="station-chevron" aria-hidden="true">
+											<CaretDown size={12} weight="bold" />
+										</span>
+										{content.career.detail}
+									</summary>
+									<ul class="mt-3 space-y-2">
+										{#each station.bullets as bullet (bullet)}
+											<li class="rule-item max-w-[60ch] text-sm leading-relaxed text-ink-soft">
+												{bullet}
+											</li>
+										{/each}
+									</ul>
+								</details>
 							{/if}
 						</div>
 					</li>
@@ -121,8 +142,73 @@
 		}
 	}
 
+	/*
+		The rule draws downward as each station arrives, rather than being there
+		the whole time. The point is not the movement: it is that the change
+		from dashed to solid becomes something the reader watches happen at the
+		second-chance Abitur, instead of a difference they may never register.
+	*/
+	.axis-line {
+		transform: scaleY(0);
+		transform-origin: top center;
+		transition: transform 520ms var(--ease-out-strong);
+	}
+
+	.station:global(.is-visible) .axis-line {
+		transform: scaleY(1);
+	}
+
 	.axis-line.is-solid {
 		background: color-mix(in srgb, var(--color-accent-on-paper) 38%, transparent);
+	}
+
+	/*
+		The current role has no end date, so its rule does not get one either: it
+		fades out instead of stopping, and the node is ringed rather than filled.
+		Static, because a reader passes this eight times in a scroll and a
+		pulsing dot would wear out on the second.
+	*/
+	.station.is-open-ended .axis-line {
+		-webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+		mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+	}
+
+	.station.is-open-ended .station-node {
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-on-paper) 22%, transparent);
+	}
+
+	.station-detail > summary {
+		list-style: none;
+		transition: color 180ms var(--ease-out-strong);
+	}
+
+	.station-detail > summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.station-detail > summary:hover {
+		color: var(--color-accent-on-paper);
+	}
+
+	.station-chevron {
+		display: inline-flex;
+		transition: transform 200ms var(--ease-out-strong);
+	}
+
+	.station-detail[open] > summary .station-chevron {
+		transform: rotate(180deg);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.axis-line,
+		.station-chevron,
+		.station-detail > summary {
+			transition: none;
+		}
+		/* The rule still has to be there; only the drawing goes away. */
+		.axis-line {
+			transform: scaleY(1);
+		}
 	}
 
 	/*

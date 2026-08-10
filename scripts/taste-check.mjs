@@ -260,6 +260,61 @@ const checks = [
 		'Nav travels home from a case study instead of dangling on a sub-path',
 		files.nav.includes('isOverview') && files.nav.includes('prefix')
 	],
+	// ---------------------------------------------------------------- anti-AI
+	// Mechanical checks for the signatures that mark a page as machine-made.
+	// These are cheap to run and cheap to violate by accident, which is exactly
+	// the combination that makes them worth pinning.
+	['No transition: all, properties are named', !/transition:\s*all|transition-all/.test(sourceText)],
+	['No gradient text', !/bg-clip-text|text-transparent/.test(sourceText)],
+	[
+		'No neon or outer glow',
+		/*
+			What makes a glow is blur with no offset. A zero-blur box-shadow at an
+			offset of zero is a ring, which is a legitimate way to mark state, so
+			the blur radius is what this looks at rather than the leading zeros.
+		*/
+		!/box-shadow:\s*0 0 (?!0)/.test(sourceText) &&
+			!/shadow-\[0_0_(?!0)/.test(sourceText) &&
+			!/drop-shadow-\[0_0_(?!0)/.test(sourceText)
+	],
+	['No custom cursor', !/cursor:\s*url|cursor-\[/.test(sourceText)],
+	['Viewport height is dynamic, never h-screen', !/h-screen/.test(sourceText)],
+	['Nothing enters from scale(0)', !/scale\(0\)|scale-0\b/.test(sourceText)],
+	[
+		'No pure black as a visible colour',
+		// `black` is legitimate inside a mask, where it is an alpha value rather
+		// than a colour anyone sees. Everywhere else it flattens the palette.
+		!/#000000|#000\b|rgb\(0,\s*0,\s*0\)/.test(sourceText) &&
+			sourceText
+				.split('\n')
+				.filter((line) => /\bblack\b/.test(line))
+				.every((line) => /mask-image/.test(line))
+	],
+	[
+		'No three-equal-column feature row',
+		// The most worn layout on the web. The one remaining grid-cols-3 is the
+		// case study metadata list, which is three facts and not three cards.
+		!files.approach.includes('grid-cols-3') &&
+			files.platforms.includes('grid-cols-[9rem_1fr_auto]') &&
+			/dl class="[^"]*sm:grid-cols-3/.test(files.caseStudy)
+	],
+	[
+		'Copy carries no marketing filler',
+		!/elevate|seamless|unleash|next-gen|revolutioni|cutting-edge|state-of-the-art|passionate|nahtlos|leidenschaft/i.test(
+			files.content
+		)
+	],
+	[
+		'Every section uses a different layout family',
+		// Six sections, six grid signatures. Two sections sharing one is the
+		// point at which a page starts reading as a template.
+		new Set(
+			[files.hero, files.platforms, files.approach, files.sideProject, files.contact]
+				.map((file) => (file.match(/grid-cols-\[[^\]]*\]/g) ?? []).sort().join('|'))
+				.filter(Boolean)
+		).size >= 3
+	],
+
 	// ---------------------------------------------------------------- delight
 	// Three moments earn a response: the download, the address, the row the
 	// reader is aiming at. Each states only what is true and none of them may
@@ -286,6 +341,35 @@ const checks = [
 			files.contact.includes("announce('selected')") &&
 			// The button's accessible name never becomes a claim about the past.
 			files.contact.includes('aria-label={content.contact.copy}')
+	],
+	[
+		'The career axis draws itself as stations arrive',
+		// The dashed to solid change at the second-chance Abitur becomes an event
+		// the reader watches, rather than a difference they may never register.
+		files.careerAxis.includes('transform: scaleY(0)') &&
+			files.careerAxis.includes('.station:global(.is-visible) .axis-line') &&
+			// Reduced motion keeps the rule, drops only the drawing.
+			/prefers-reduced-motion[\s\S]*transform: scaleY\(1\)/.test(files.careerAxis)
+	],
+	[
+		'The current role reads as open ended',
+		// No end date, so no end to its rule: it fades instead of stopping, and
+		// the node is ringed. Static, because this is passed on every scroll.
+		files.careerAxis.includes('is-open-ended') &&
+			/\.station\.is-open-ended \.axis-line[\s\S]{0,220}mask-image/.test(files.careerAxis) &&
+			!/is-open-ended[\s\S]{0,400}animation:/.test(files.careerAxis)
+	],
+	[
+		'Station detail is available on request, natively',
+		// The bullets existed in the content and were rendered for one station
+		// out of eight. Native details, so keyboard, screen readers and a
+		// no-JavaScript load all get it without anything being wired up.
+		files.careerAxis.includes('<details') &&
+			files.careerAxis.includes('station.bullets.length > 1') &&
+			files.careerAxis.includes('open={isCurrent}') &&
+			files.content.includes("detail: 'Aufgaben'") &&
+			// Touch target on the toggle.
+			files.careerAxis.includes('min-h-11')
 	],
 	[
 		'Row feedback is direction aware and gated to real pointers',

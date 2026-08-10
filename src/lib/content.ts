@@ -80,6 +80,8 @@ export type SiteContent = {
 	career: {
 		title: string;
 		intro: string;
+		/** Label on the per-station disclosure. */
+		detail: string;
 		stations: Station[];
 	};
 	project: {
@@ -291,6 +293,7 @@ export const de: SiteContent = {
 	},
 	career: {
 		title: 'Werdegang',
+		detail: 'Aufgaben',
 		intro:
 			'Ich habe im Einkauf gearbeitet, das Abitur auf dem zweiten Bildungsweg nachgeholt, bin über Werkstudentenstellen in die IT eingestiegen und arbeite seit 2023 in der Virtualisierung.',
 		stations: [
@@ -606,6 +609,7 @@ export const en: SiteContent = {
 	},
 	career: {
 		title: 'Career',
+		detail: 'Responsibilities',
 		intro:
 			'I worked in purchasing, took the second-chance route to a university entrance qualification, moved into IT through working-student roles, and have worked in virtualization since 2023.',
 		stations: [
