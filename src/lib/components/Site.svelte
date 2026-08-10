@@ -2,13 +2,11 @@
 	import { langState } from '$lib/state/lang.svelte';
 	import { page } from '$app/state';
 	import { contentFor } from '$lib/content';
-	import Nav from '$lib/components/Nav.svelte';
 	import Hero from '$lib/components/Hero.svelte';
-	import ClientProjects from '$lib/components/ClientProjects.svelte';
-	import Skills from '$lib/components/Skills.svelte';
-	import CareerMap from '$lib/components/CareerMap.svelte';
-	import Project from '$lib/components/Project.svelte';
-	import Certifications from '$lib/components/Certifications.svelte';
+	import Platforms from '$lib/components/Platforms.svelte';
+	import Approach from '$lib/components/Approach.svelte';
+	import CareerAxis from '$lib/components/CareerAxis.svelte';
+	import SideProject from '$lib/components/SideProject.svelte';
 	import Contact from '$lib/components/Contact.svelte';
 
 	let content = $derived(contentFor(langState.current));
@@ -50,19 +48,9 @@
 	<meta name="twitter:image" content={ogImage} />
 </svelte:head>
 
-<a
-	href="#main-content"
-	class="fixed top-3 left-3 z-[60] -translate-y-24 rounded-xl bg-ink px-4 py-3 font-semibold text-paper transition-transform focus:translate-y-0"
->
-	{langState.current === 'de' ? 'Zum Inhalt springen' : 'Skip to content'}
-</a>
-<Nav {content} />
-<main id="main-content" tabindex="-1">
-	<Hero {content} />
-	<ClientProjects {content} />
-	<Skills {content} />
-	<CareerMap {content} />
-	<Project {content} />
-	<Certifications {content} />
-	<Contact {content} />
-</main>
+<Hero {content} />
+<Platforms {content} />
+<Approach {content} />
+<CareerAxis {content} />
+<SideProject {content} />
+<Contact {content} />

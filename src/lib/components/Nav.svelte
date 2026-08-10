@@ -1,25 +1,32 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	import { langState } from '$lib/state/lang.svelte';
-	import type { SiteContent } from '$lib/content';
+	import { contentFor } from '$lib/content';
 	import List from 'phosphor-svelte/lib/List';
 	import X from 'phosphor-svelte/lib/X';
 
-	let { content }: { content: SiteContent } = $props();
+	let content = $derived(contentFor(langState.current));
 
 	let menuOpen = $state(false);
 	let activeId = $state('');
 	let hasScrolled = $state(false);
 	let menuButton = $state<HTMLButtonElement | null>(null);
 
-	const SECTION_IDS = ['projects', 'skills', 'career', 'project', 'contact'];
+	const SECTION_IDS = ['platforms', 'approach', 'career', 'project', 'contact'];
+
+	// The overview owns the anchors. From a case study page the same labels have
+	// to travel back to `/` first, otherwise they resolve against the sub-path
+	// and go nowhere.
+	let isOverview = $derived(page.url.pathname === '/' || page.url.pathname === '/light');
+	let prefix = $derived(isOverview ? '' : '/');
 
 	let links = $derived([
-		{ href: '#projects', label: content.nav.projects },
-		{ href: '#skills', label: content.nav.skills },
-		{ href: '#career', label: content.nav.career },
-		{ href: '#project', label: content.nav.project },
-		{ href: '#contact', label: content.nav.contact }
+		{ id: 'platforms', label: content.nav.platforms },
+		{ id: 'approach', label: content.nav.approach },
+		{ id: 'career', label: content.nav.career },
+		{ id: 'project', label: content.nav.project },
+		{ id: 'contact', label: content.nav.contact }
 	]);
 
 	function closeMenu(returnFocus = false) {
@@ -75,17 +82,17 @@
 <svelte:window on:keydown={onKeydown} on:pointerdown={onPointerDown} />
 
 <header
-	class="site-header fixed inset-x-0 top-0 z-50 border-b {hasScrolled || menuOpen ? 'is-scrolled' : ''}"
+	class="site-header fixed inset-x-0 top-0 z-50 border-b {hasScrolled || menuOpen
+		? 'is-scrolled'
+		: ''}"
 >
-	<div
-		class="site-nav-panel mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6"
-	>
+	<div class="site-nav-panel mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
 		<a
-			href="#top"
+			href={isOverview ? '#top' : '/'}
 			aria-label={langState.current === 'de'
 				? 'Dennis Wiredu - zurück zum Anfang'
 				: 'Dennis Wiredu - back to top'}
-			class="group flex min-h-11 items-center font-[family-name:var(--font-display)] text-xl font-extrabold tracking-[-0.045em] text-ink"
+			class="group flex min-h-11 items-center font-[family-name:var(--font-display)] text-lg font-bold tracking-[-0.03em] text-ink"
 		>
 			<span>Dennis <span class="wordmark-accent text-accent-on-paper">Wiredu</span></span>
 		</a>
@@ -94,13 +101,13 @@
 			aria-label={langState.current === 'de' ? 'Hauptnavigation' : 'Main navigation'}
 			class="hidden items-center gap-1 lg:flex"
 		>
-			{#each links as link (link.href)}
-				{@const isActive = link.href === `#${activeId}`}
+			{#each links as link (link.id)}
+				{@const isActive = isOverview && link.id === activeId}
 				<a
-					href={link.href}
+					href="{prefix}#{link.id}"
 					aria-current={isActive ? 'true' : undefined}
 					class="relative px-3 py-2 text-sm transition-colors {isActive
-						? 'font-semibold text-ink'
+						? 'font-medium text-ink'
 						: 'text-ink-soft hover:text-ink'}"
 				>
 					{link.label}
@@ -118,7 +125,7 @@
 			<button
 				type="button"
 				onclick={() => langState.toggle()}
-				class="flex h-10 min-w-10 items-center justify-center px-2 text-xs font-bold tracking-[0.14em] text-ink transition-colors hover:text-accent-on-paper active:scale-[0.98]"
+				class="meta flex h-10 min-w-10 items-center justify-center px-2 font-medium text-ink transition-colors hover:text-accent-on-paper active:scale-[0.98]"
 				aria-label={langState.current === 'de' ? 'Switch to English' : 'Auf Deutsch wechseln'}
 			>
 				{langState.current === 'de' ? 'EN' : 'DE'}
@@ -160,12 +167,12 @@
 			? ''
 			: 'hidden'}"
 	>
-		{#each links as link (link.href)}
+		{#each links as link (link.id)}
 			<a
-				href={link.href}
+				href="{prefix}#{link.id}"
 				onclick={() => closeMenu()}
-				aria-current={link.href === `#${activeId}` ? 'true' : undefined}
-				class="block border-b border-ink/10 py-4 font-[family-name:var(--font-display)] text-xl font-bold text-ink transition-colors last:border-b-0 hover:text-accent-on-paper aria-[current=true]:text-accent-on-paper"
+				aria-current={isOverview && link.id === activeId ? 'true' : undefined}
+				class="block border-b border-ink/10 py-4 font-[family-name:var(--font-display)] text-lg font-semibold text-ink transition-colors last:border-b-0 hover:text-accent-on-paper aria-[current=true]:text-accent-on-paper"
 			>
 				{link.label}
 			</a>
@@ -193,7 +200,7 @@
 	.wordmark-accent {
 		text-decoration: underline;
 		text-decoration-color: var(--color-signal);
-		text-decoration-thickness: 0.16em;
+		text-decoration-thickness: 0.14em;
 		text-underline-offset: 0.2em;
 		transition:
 			color 180ms ease,

@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import type { SiteContent } from '$lib/content';
 	import { langState } from '$lib/state/lang.svelte';
-	import { countUp } from '$lib/actions/countUp';
 	import Hero3D from './Hero3D.svelte';
 	import MobileHeroParticles from './MobileHeroParticles.svelte';
 
@@ -29,7 +28,10 @@
 >
 	<!-- On mobile the object gets its own stage. Copy begins below the diagonal
 	     panel edge, so the artwork can stay vivid without sacrificing contrast. -->
-	<div class="mobile-hero-art pointer-events-none absolute inset-x-0 top-0 overflow-hidden md:hidden" aria-hidden="true">
+	<div
+		class="mobile-hero-art pointer-events-none absolute inset-x-0 top-0 overflow-hidden md:hidden"
+		aria-hidden="true"
+	>
 		<div class="mobile-hero-object-wrap absolute inset-0">
 			{#if !showScene}
 				<MobileHeroParticles />
@@ -37,94 +39,64 @@
 		</div>
 		<div class="mobile-hero-scrim absolute inset-0"></div>
 	</div>
-	<div class="mobile-hero-panel pointer-events-none absolute inset-x-0 bottom-0 md:hidden" aria-hidden="true"></div>
+	<div
+		class="mobile-hero-panel pointer-events-none absolute inset-x-0 bottom-0 md:hidden"
+		aria-hidden="true"
+	></div>
 
 	{#if showScene}
 		<!-- Decorative backdrop. pointer-events stay off so the scene never
 		     swallows clicks; Hero3D tracks the pointer on window instead.
-		     Anchored right rather than centred: the copy column keeps the left
-		     third to itself, so the type never has to fight the densest part of
-		     the mesh for contrast. -->
-		<div class="pointer-events-none absolute inset-y-0 right-0 flex w-[58%] items-center justify-center">
-			<!-- Sized to sit whole inside the right column. It used to run at 196%
-			     and read as wallpaper; at this scale the tetrahedron is an object
-			     with an edge, which is what makes the split composition work. -->
+		     Anchored right: the copy column keeps the left third to itself, so
+		     the type never fights the densest part of the mesh for contrast. -->
+		<div
+			class="pointer-events-none absolute inset-y-0 right-0 flex w-[58%] items-center justify-center"
+		>
 			<div class="aspect-square h-[96%] max-w-none translate-x-[4%] lg:h-[104%]">
 				<Hero3D />
 			</div>
 		</div>
-		<!-- Lifts the copy off the densest part of the mesh. -->
 		<div class="hero-scrim pointer-events-none absolute inset-0"></div>
 	{/if}
 
 	<div class="hero-copy relative mx-auto flex w-full max-w-6xl flex-col md:justify-center">
-		<div class="md:max-w-[30rem] lg:max-w-[34rem]">
+		<div class="md:max-w-[32rem] lg:max-w-[36rem]">
 			<h1
-				class="hero-name font-[family-name:var(--font-display)] text-[17vw] leading-[0.82] font-extrabold tracking-[-0.07em] text-ink sm:text-[13vw] md:text-[7.4vw] xl:text-[6.75rem]"
+				class="hero-name font-[family-name:var(--font-display)] text-[16vw] leading-[0.86] font-bold tracking-[-0.055em] text-ink sm:text-[12vw] md:text-[7vw] xl:text-[6.25rem]"
 			>
 				{#each nameWords as word, i (i)}<span class="hero-word" style="animation-delay: {i * 90}ms"
-					>{word}</span
-				>{/each}
+						>{word}</span
+					>{/each}
 			</h1>
 
-			<!--
-				Hierarchy through weight and colour rather than raw scale: the role
-				used to compete with the name at text-5xl, which left the sentence
-				that actually explains the work looking like a footnote.
-			-->
-			<p
-				class="hero-role mt-6 max-w-[28ch] font-[family-name:var(--font-display)] text-xl leading-tight font-bold tracking-tight text-accent-on-paper md:text-2xl"
-			>
+			<p class="hero-role meta mt-6 font-medium tracking-[0.08em] text-accent-on-paper uppercase">
 				{content.hero.role}
 			</p>
 
-			<p class="hero-tagline mt-4 max-w-[42ch] text-lg leading-relaxed text-ink-soft md:text-xl">
-				{content.hero.tagline}
+			<!-- The positioning line carries the number that used to sit in the
+			     facts bar. It is the one figure a hiring manager scans for. -->
+			<p class="hero-positioning mt-4 max-w-[38ch] text-xl leading-snug text-ink md:text-2xl">
+				{content.hero.positioning}
 			</p>
 
-			<div class="hero-actions mt-9 grid w-full grid-cols-2 gap-3 md:flex md:w-auto md:flex-wrap md:items-center">
-				<!-- The German labels wrapped to two lines in a 158px column at
-				     text-sm, which pushed the buttons past the fold on a 375px
-				     phone. One notch down keeps both on a single line. -->
+			<div
+				class="hero-actions mt-9 grid w-full grid-cols-2 gap-3 md:flex md:w-auto md:flex-wrap md:items-center"
+			>
 				<a
 					href="#contact"
-					class="flex min-h-12 items-center justify-center rounded-lg bg-signal px-2 py-3 text-center text-[0.8125rem] font-bold text-on-signal transition-transform hover:-translate-y-0.5 active:scale-[0.98] md:px-6 md:text-sm"
+					class="flex min-h-12 items-center justify-center rounded-lg bg-signal px-2 py-3 text-center text-[0.8125rem] font-semibold text-on-signal transition-transform hover:-translate-y-0.5 active:scale-[0.98] md:px-6 md:text-sm"
 				>
-					{content.hero.cta}
+					{content.hero.ctaContact}
 				</a>
 				<a
-					href="#career"
-					class="flex min-h-12 items-center justify-center rounded-lg border-2 border-ink px-2 py-3 text-center text-[0.8125rem] font-semibold text-ink transition-colors hover:border-accent-on-paper hover:text-accent-on-paper md:px-6 md:text-sm"
+					href={content.cv.href}
+					download
+					class="flex min-h-12 items-center justify-center rounded-lg border border-ink/40 px-2 py-3 text-center text-[0.8125rem] font-medium text-ink transition-colors hover:border-accent-on-paper hover:text-accent-on-paper md:px-6 md:text-sm"
 				>
-					{content.hero.ctaSecondary}
+					{content.hero.ctaCv}
 				</a>
 			</div>
 		</div>
-	</div>
-</section>
-
-<!--
-	The three numbers used to sit in a clipped panel as three equal columns of
-	text-7xl. Same facts, read as a hairline strip instead: the figures support
-	the hero, they are not a second headline.
--->
-<section class="relative mx-auto max-w-6xl px-4 sm:px-6">
-	<div class="grid border-t border-ink/15 sm:grid-cols-3">
-		{#each content.stats as stat, i (stat.label)}
-			<div
-				class="flex items-baseline gap-3 border-b border-ink/12 py-5 sm:border-b-0 sm:py-7 {i > 0
-					? 'sm:border-l sm:border-ink/12 sm:pl-6'
-					: ''} sm:pr-6"
-			>
-				<span
-					use:countUp={{ text: stat.value, locale: langState.current }}
-					class="shrink-0 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-ink md:text-4xl"
-				>
-					{stat.value}
-				</span>
-				<span class="text-sm leading-snug text-ink-soft">{stat.label}</span>
-			</div>
-		{/each}
 	</div>
 </section>
 
@@ -141,11 +113,11 @@
 		text-shadow: 0 2px 28px color-mix(in srgb, var(--color-paper) 62%, transparent);
 	}
 	.mobile-hero-art {
-		height: clamp(18rem, 48dvh, 27rem);
+		height: clamp(18rem, 44dvh, 25rem);
 		background: var(--color-paper);
 	}
 	.mobile-hero-panel {
-		top: clamp(16rem, 42dvh, 23rem);
+		top: clamp(16rem, 38dvh, 21rem);
 		background: linear-gradient(
 			145deg,
 			color-mix(in srgb, var(--color-paper) 91%, var(--color-hero-blue) 9%),
@@ -171,7 +143,11 @@
 	}
 	.mobile-hero-scrim {
 		background:
-			radial-gradient(ellipse 72% 72% at 50% 54%, transparent 42%, color-mix(in srgb, var(--color-paper) 42%, transparent) 100%),
+			radial-gradient(
+				ellipse 72% 72% at 50% 54%,
+				transparent 42%,
+				color-mix(in srgb, var(--color-paper) 42%, transparent) 100%
+			),
 			linear-gradient(
 				to bottom,
 				color-mix(in srgb, var(--color-paper) 38%, transparent),
@@ -208,25 +184,21 @@
 	@media (max-width: 767px) {
 		.hero-copy {
 			align-items: flex-start;
-			padding: calc(clamp(16rem, 42dvh, 23rem) + 4.5rem) 1.5rem 2.5rem;
+			padding: calc(clamp(16rem, 38dvh, 21rem) + 4.5rem) 1.5rem 2.5rem;
 			text-align: left;
 		}
 		.hero-name {
 			text-shadow: none;
 		}
-		.hero-role {
-			max-width: 20ch;
-		}
-		.hero-tagline {
-			max-width: 38ch;
-			font-size: 1.0625rem;
-			line-height: 1.55;
+		.hero-positioning {
+			max-width: 34ch;
+			font-size: 1.125rem;
+			line-height: 1.45;
 		}
 	}
 
-	/* Directional wash rather than a radial one: the object now sits to the
-	   right, so the page colour only has to carry the left column. The facets
-	   on the right stay untouched. */
+	/* Directional wash: the object sits to the right, so the page colour only
+	   has to carry the left column. The facets on the right stay untouched. */
 	.hero-scrim {
 		background: linear-gradient(
 			100deg,
