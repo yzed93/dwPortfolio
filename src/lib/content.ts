@@ -68,7 +68,7 @@ export type SiteContent = {
 		ctaContact: string;
 		ctaCv: string;
 	};
-	cv: { href: string; note: string };
+	cv: { href: string; note: string; started: string };
 	platforms: { title: string; intro: string; items: Platform[] };
 	approach: { title: string; intro: string; items: ApproachItem[] };
 	/*
@@ -93,7 +93,14 @@ export type SiteContent = {
 		imageAlt: string;
 	};
 	credentials: { title: string; items: { name: string; issuer: string; year: string }[] };
-	contact: { title: string; intro: string; email: string };
+	contact: {
+		title: string;
+		intro: string;
+		email: string;
+		copy: string;
+		copied: string;
+		copyFallback: string;
+	};
 	caseStudy: {
 		back: string;
 		context: string;
@@ -139,7 +146,7 @@ export const de: SiteContent = {
 		ctaContact: 'Kontakt aufnehmen',
 		ctaCv: 'Lebenslauf (PDF)'
 	},
-	cv: { href: CV_HREF, note: 'Vollständiger Lebenslauf als PDF' },
+	cv: { href: CV_HREF, note: 'Vollständiger Lebenslauf als PDF', started: 'Download gestartet' },
 	platforms: {
 		title: 'Plattformen',
 		intro:
@@ -418,7 +425,10 @@ export const de: SiteContent = {
 	contact: {
 		title: 'Kontakt',
 		intro: 'Am schnellsten per E-Mail.',
-		email: 'dennis@wiredu.cloud'
+		email: 'dennis@wiredu.cloud',
+		copy: 'Kopieren',
+		copied: 'Kopiert',
+		copyFallback: 'Markiert'
 	},
 	caseStudy: {
 		back: 'Alle Plattformen',
@@ -454,7 +464,7 @@ export const en: SiteContent = {
 		ctaContact: 'Get in touch',
 		ctaCv: 'CV (PDF)'
 	},
-	cv: { href: CV_HREF, note: 'Full CV as a PDF' },
+	cv: { href: CV_HREF, note: 'Full CV as a PDF', started: 'Download started' },
 	platforms: {
 		title: 'Platforms',
 		intro:
@@ -730,7 +740,10 @@ export const en: SiteContent = {
 	contact: {
 		title: 'Contact',
 		intro: 'Email is the quickest way to reach me.',
-		email: 'dennis@wiredu.cloud'
+		email: 'dennis@wiredu.cloud',
+		copy: 'Copy',
+		copied: 'Copied',
+		copyFallback: 'Selected'
 	},
 	caseStudy: {
 		back: 'All platforms',

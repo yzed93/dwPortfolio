@@ -30,6 +30,7 @@ const files = {
 	careerField: read('src/lib/components/CareerField.svelte'),
 	sideProject: read('src/lib/components/SideProject.svelte'),
 	contact: read('src/lib/components/Contact.svelte'),
+	cvButton: read('src/lib/components/CvButton.svelte'),
 	nav: read('src/lib/components/Nav.svelte'),
 	site: read('src/lib/components/Site.svelte'),
 	layout: read('src/routes/+layout.svelte'),
@@ -110,7 +111,8 @@ const checks = [
 			files.content.includes("CV_HREF = '/docs/Lebenslauf_Dennis_Wiredu.pdf'") &&
 			files.hero.includes('content.cv.href') &&
 			files.contact.includes('content.cv.href') &&
-			files.hero.includes('download')
+			// The download attribute lives in the shared button component now.
+			files.cvButton.includes('download')
 	],
 	[
 		'The facts bar is gone and its figure lives in the positioning line',
@@ -253,6 +255,55 @@ const checks = [
 		'Nav travels home from a case study instead of dangling on a sub-path',
 		files.nav.includes('isOverview') && files.nav.includes('prefix')
 	],
+	// ---------------------------------------------------------------- delight
+	// Three moments earn a response: the download, the address, the row the
+	// reader is aiming at. Each states only what is true and none of them may
+	// move the layout while being used.
+	[
+		'The CV download confirms without claiming completion',
+		// Both labels stay in the layout, so the control cannot resize mid-press.
+		files.cvButton.includes("grid-template-areas: 'stack'") &&
+			files.cvButton.includes('aria-label={label}') &&
+			files.cvButton.includes('role="status"') &&
+			// The click proves the download started. Nothing on this page can
+			// observe that it finished, so no label may say so. Checked against the
+			// shipped strings rather than the source, which discusses the rule.
+			/started: 'Download gestartet'/.test(files.content) &&
+			/started: 'Download started'/.test(files.content) &&
+			!/(abgeschlossen|fertig|downloaded|saved)'/i.test(files.content)
+	],
+	[
+		'Copying the address recovers honestly when the clipboard is refused',
+		files.contact.includes('navigator.clipboard.writeText') &&
+			// A refused clipboard must not report success; the address gets
+			// selected instead so the reader's own shortcut works.
+			files.contact.includes('selectNodeContents') &&
+			files.contact.includes("announce('selected')") &&
+			// The button's accessible name never becomes a claim about the past.
+			files.contact.includes('aria-label={content.contact.copy}')
+	],
+	[
+		'Row feedback is direction aware and gated to real pointers',
+		files.platforms.includes('function anchorSweep') &&
+			files.platforms.includes('--sweep-origin') &&
+			files.platforms.includes('@media (hover: hover) and (pointer: fine)') &&
+			// Keyboard focus has no entry side, so it draws from the reading edge.
+			files.platforms.includes('.platform-row:focus-visible::after')
+	],
+	[
+		'Delight motion stays inside the motion budget and folds under reduced motion',
+		files.styles.includes('--ease-out-strong') &&
+			// Nothing in the three details runs longer than the 300ms UI ceiling.
+			![
+				files.cvButton,
+				files.contact,
+				files.platforms
+			].some((file) => /transition:[^;]*?(\d{3,})ms/.test(file) && /[4-9]\d\dms|\d{4}ms/.test(file)) &&
+			[read('src/lib/components/CvButton.svelte'), files.contact, files.platforms].every((file) =>
+				file.includes('prefers-reduced-motion: reduce')
+			)
+	],
+
 	[
 		'Contact renders the requested email and the CV, nothing else',
 		files.contact.includes('mailto:{content.contact.email}') &&

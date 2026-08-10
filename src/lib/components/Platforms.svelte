@@ -4,6 +4,22 @@
 	import ArrowRight from 'phosphor-svelte/lib/ArrowRight';
 
 	let { content }: { content: SiteContent } = $props();
+
+	/*
+		The rule under a row grows from the side the pointer crossed into it,
+		so the response acknowledges where the reader actually came from rather
+		than playing the same canned sweep every time. Set once on enter, on the
+		row itself: a custom property written on a shared parent would force a
+		style recalculation through every child on the list.
+	*/
+	function anchorSweep(event: PointerEvent) {
+		const row = event.currentTarget as HTMLElement;
+		const rect = row.getBoundingClientRect();
+		row.style.setProperty(
+			'--sweep-origin',
+			event.clientX < rect.left + rect.width / 2 ? 'left' : 'right'
+		);
+	}
 </script>
 
 <!--
@@ -25,7 +41,8 @@
 			<li use:reveal={i * 70}>
 				<a
 					href="/projekte/{platform.slug}"
-					class="platform-row group grid gap-x-8 gap-y-3 border-b border-ink/15 py-7 transition-colors md:grid-cols-[9rem_1fr_auto] md:items-baseline md:py-8"
+					onpointerenter={anchorSweep}
+					class="platform-row group relative grid gap-x-8 gap-y-3 border-b border-ink/15 py-7 transition-colors md:grid-cols-[9rem_1fr_auto] md:items-baseline md:py-8"
 				>
 					<!-- The figure leads the row and is set in mono, so the four
 					     platform sizes stack into a readable column of numbers. The unit
@@ -68,11 +85,49 @@
 </section>
 
 <style>
-	.platform-row:hover {
-		background: color-mix(in srgb, var(--color-ink) 3%, transparent);
+	/*
+		Sits on the existing row divider rather than adding a second line, so
+		hovering thickens the structure that is already there instead of
+		introducing a new element.
+	*/
+	.platform-row::after {
+		position: absolute;
+		right: 0;
+		bottom: -1px;
+		left: 0;
+		height: 1px;
+		content: '';
+		background: var(--color-accent-on-paper);
+		transform: scaleX(0);
+		transform-origin: var(--sweep-origin, left) center;
+		transition: transform 240ms var(--ease-out-strong);
 	}
 
-	.platform-row:hover .platform-arrow,
+	/*
+		Gated: a touch device fires hover on tap, which would leave the rule
+		stuck on whichever row was last pressed.
+	*/
+	@media (hover: hover) and (pointer: fine) {
+		.platform-row:hover {
+			background: color-mix(in srgb, var(--color-ink) 3%, transparent);
+		}
+
+		.platform-row:hover::after {
+			transform: scaleX(1);
+		}
+
+		.platform-row:hover .platform-arrow {
+			transform: translateX(4px);
+		}
+	}
+
+	/* Keyboard focus has no side to come from, so it draws from the reading
+	   edge instead of guessing. */
+	.platform-row:focus-visible::after {
+		transform: scaleX(1);
+		transform-origin: left center;
+	}
+
 	.platform-row:focus-visible .platform-arrow {
 		transform: translateX(4px);
 	}
@@ -80,6 +135,15 @@
 	@media (prefers-reduced-motion: reduce) {
 		.platform-arrow {
 			transition: none;
+		}
+		.platform-row::after {
+			transition-property: opacity;
+			transform: scaleX(1);
+			opacity: 0;
+		}
+		.platform-row:hover::after,
+		.platform-row:focus-visible::after {
+			opacity: 1;
 		}
 		.platform-row:hover .platform-arrow,
 		.platform-row:focus-visible .platform-arrow {

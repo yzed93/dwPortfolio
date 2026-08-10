@@ -4,6 +4,7 @@
 	import { langState } from '$lib/state/lang.svelte';
 	import Hero3D from './Hero3D.svelte';
 	import MobileHeroParticles from './MobileHeroParticles.svelte';
+	import CvButton from './CvButton.svelte';
 
 	let { content }: { content: SiteContent } = $props();
 
@@ -88,13 +89,12 @@
 				>
 					{content.hero.ctaContact}
 				</a>
-				<a
+				<CvButton
 					href={content.cv.href}
-					download
-					class="flex min-h-12 items-center justify-center rounded-lg border border-ink/40 px-2 py-3 text-center text-[0.8125rem] font-medium text-ink transition-colors hover:border-accent-on-paper hover:text-accent-on-paper md:px-6 md:text-sm"
-				>
-					{content.hero.ctaCv}
-				</a>
+					label={content.hero.ctaCv}
+					confirmLabel={content.cv.started}
+					class="min-h-12 rounded-lg border border-ink/40 px-2 py-3 text-center text-[0.8125rem] font-medium text-ink hover:border-accent-on-paper hover:text-accent-on-paper md:px-5 md:text-sm"
+				/>
 			</div>
 		</div>
 	</div>
