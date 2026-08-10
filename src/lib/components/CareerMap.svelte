@@ -2,6 +2,16 @@
 	import { onMount, onDestroy, untrack } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import 'maplibre-gl/dist/maplibre-gl.css';
+	/*
+		MapLibre derives its worker URL at runtime from `import.meta.url`, expecting
+		`maplibre-gl-worker.mjs` to sit next to its own file. After bundling into a
+		hashed chunk that sibling does not exist, the worker 404s, and without a
+		worker no vector tile is ever parsed: the map stays blank while the style
+		itself loads fine. Because the URL is assembled from a string at runtime no
+		bundler can see it, so the worker is emitted deliberately here and handed to
+		MapLibre. `?worker&url` bundles its own sibling import along with it.
+	*/
+	import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import type { SiteContent, Station } from '$lib/content';
 	import { reveal } from '$lib/actions/reveal';
 
@@ -94,6 +104,10 @@
 			loadStarted = true;
 			const maplibregl = await import('maplibre-gl');
 			if (cancelled || !mapContainer) return;
+
+			// Has to happen before the first map is constructed, otherwise the
+			// workers are already spawned from the broken default URL.
+			maplibregl.setWorkerUrl(maplibreWorkerUrl);
 
 			map = new maplibregl.Map({
 				container: mapContainer,
