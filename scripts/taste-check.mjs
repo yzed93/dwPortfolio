@@ -154,13 +154,41 @@ const checks = [
 	],
 	[
 		'The career field resolves scatter into lattice across the section',
-		files.careerField.includes('readProgress') &&
+		files.careerField.includes('readTarget') &&
 			files.careerField.includes('MAX_DELAY') &&
 			// The stagger budget has to close, or the last columns never arrive.
 			files.careerField.includes('const SETTLE = 1 - MAX_DELAY') &&
 			files.careerField.includes('IntersectionObserver') &&
 			// Progress is read inside the frame loop, never from a scroll listener.
 			!files.careerField.includes("addEventListener('scroll'")
+	],
+	[
+		'The field follows the scroll on a spring, not one to one',
+		files.careerField.includes('const STIFFNESS') &&
+			files.careerField.includes('const DAMPING') &&
+			// Fixed-step integration, so the motion does not change with frame rate.
+			files.careerField.includes('const STEP = 1 / 120') &&
+			files.careerField.includes('while (accumulator >= STEP)') &&
+			// A backgrounded tab hands back a huge delta on return; capping it stops
+			// the spring being launched across the whole field in one frame.
+			files.careerField.includes('Math.min((now - lastTime) / 1000, 0.05)')
+	],
+	[
+		'The field measures geometry once, not inside every frame',
+		files.careerField.includes('function measureSection') &&
+			// getBoundingClientRect in the frame loop forces a layout flush per
+			// frame, which is what made the field stutter in the first place.
+			!/function readTarget[\s\S]{0,400}getBoundingClientRect/.test(files.careerField)
+	],
+	[
+		'Points are drawn in bands rather than one context state change each',
+		files.careerField.includes('const BANDS') &&
+			// 416 points collapse to at most one fill per band.
+			/for \(let b = 0; b < BANDS; b\+\+\)/.test(files.careerField)
+	],
+	[
+		'No closing reflection on the career axis',
+		!files.content.includes('closing:') && !files.careerAxis.includes('career.closing')
 	],
 	[
 		'The field paints outside the frame loop as well',

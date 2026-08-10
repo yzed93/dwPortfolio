@@ -71,11 +71,15 @@ export type SiteContent = {
 	cv: { href: string; note: string };
 	platforms: { title: string; intro: string; items: Platform[] };
 	approach: { title: string; intro: string; items: ApproachItem[] };
+	/*
+		No closing reflection here on purpose. The register for the whole site is
+		factual: what was built, how large, with what. Summarising one's own
+		trajectory ("what stayed with me was...") is the voice of a LinkedIn post
+		and is unwanted anywhere on the page.
+	*/
 	career: {
 		title: string;
 		intro: string;
-		/** Sits at the end of the axis, where the arc resolves. */
-		closing: string;
 		stations: Station[];
 	};
 	project: {
@@ -214,7 +218,7 @@ export const de: SiteContent = {
 					'Systematisch getestet, bevor der erste Nutzer auf die Plattform kam'
 				],
 				outcome:
-					'Eine neu aufgebaute Plattform, die mit ihren Betriebsprozessen zusammen entstanden ist, statt sie später um sie herum zu bauen.',
+					'Die Plattform ging zusammen mit ihren Betriebs-, Deployment- und Freigabeprozessen live.',
 				stack: [
 					'Citrix Virtual Apps & Desktops',
 					'Citrix NetScaler',
@@ -240,7 +244,7 @@ export const de: SiteContent = {
 					'Manuelle Abläufe durch dokumentierte Standardprozesse abgelöst'
 				],
 				outcome:
-					'Der Betrieb hängt nicht mehr an einzelnen Personen, sondern an dokumentierten Prozessen.',
+					'Die Abläufe sind dokumentiert und damit nicht mehr an einzelne Personen gebunden.',
 				stack: ['Citrix Virtual Apps & Desktops', 'Ivanti', 'Active Directory', 'PowerShell']
 			}
 		]
@@ -256,7 +260,7 @@ export const de: SiteContent = {
 			},
 			{
 				title: 'Den Betrieb vor dem Go-live entwerfen',
-				body: 'Eine Plattform ist nicht fertig, wenn sie läuft, sondern wenn klar ist, wie sie im Alltag betrieben, aktualisiert und freigegeben wird. Diese Prozesse entstehen bei mir zusammen mit der Architektur.',
+				body: 'Eine Plattform ist nicht fertig, wenn sie läuft, sondern wenn feststeht, wie sie betrieben, aktualisiert und freigegeben wird. Diese Prozesse entstehen zusammen mit der Architektur.',
 				tools: [
 					'Citrix Virtual Apps & Desktops',
 					'Citrix NetScaler',
@@ -268,7 +272,7 @@ export const de: SiteContent = {
 			},
 			{
 				title: 'So übergeben, dass es ohne mich weitergeht',
-				body: 'Was nur in meinem Kopf existiert, ist ein Risiko für den Kunden. Dokumentation und SOPs sind für mich Teil der Lieferung, nicht die Aufgabe danach.',
+				body: 'Dokumentation und SOPs entstehen mit der Arbeit, nicht danach. Sonst hängt der Betrieb an der Person, die ihn aufgebaut hat.',
 				tools: [
 					'Technische Dokumentation',
 					'SOP-Erstellung',
@@ -282,9 +286,7 @@ export const de: SiteContent = {
 	career: {
 		title: 'Der Weg hierher',
 		intro:
-			'Ich bin nicht auf dem geraden Weg in die IT gekommen. Ich habe im Großhandel eingekauft, das Abitur auf dem zweiten Bildungsweg nachgeholt und mich über Werkstudentenstellen in die Infrastruktur gearbeitet.',
-		closing:
-			'Von der ersten Werkstudentenstelle bis zur Verantwortung für Plattformen mit 15.000 Nutzern sind es sieben Jahre. Was dabei geblieben ist: Ich lerne Systeme, indem ich sie betreibe.',
+			'Einkauf im Großhandel, Abitur auf dem zweiten Bildungsweg, Werkstudentenstellen in der Administration, seit 2023 Virtualisierung.',
 		stations: [
 			{
 				id: 'hausladen',
@@ -335,7 +337,7 @@ export const de: SiteContent = {
 				period: '10/2020 - 02/2023',
 				year: '2020',
 				summary:
-					'Schwerpunkt Mensch-Maschine-Interaktion. Abgebrochen, als die Arbeit in der IT-Beratung mehr Substanz bot als das Studium.',
+					'Schwerpunkt Mensch-Maschine-Interaktion. Abgebrochen, um in die IT-Beratung einzusteigen.',
 				bullets: [
 					'Fünf Semester Medieninformatik mit Schwerpunkt Mensch-Maschine-Interaktion',
 					'Ohne Abschluss beendet, um in die IT-Beratung einzusteigen'
@@ -395,7 +397,7 @@ export const de: SiteContent = {
 		name: 'Tabiyume',
 		tagline: 'App zur Reiseplanung',
 		description:
-			'Allein umgesetzt, von der Idee bis zum Deployment. Funktioniert offline, gleicht sich mit der Cloud ab und erlaubt gemeinsames Planen in Echtzeit auf einer interaktiven Karte. Der Grund, warum ich Infrastruktur auch aus der Sicht derer verstehe, die darauf entwickeln.',
+			'Allein umgesetzt, von der Idee bis zum Deployment. Funktioniert offline, gleicht sich mit der Cloud ab und erlaubt gemeinsames Planen in Echtzeit auf einer interaktiven Karte.',
 		stack: TABIYUME_STACK,
 		link: 'https://www.tabiyume.de',
 		cta: 'Projekt ansehen',
@@ -415,7 +417,7 @@ export const de: SiteContent = {
 	},
 	contact: {
 		title: 'Kontakt',
-		intro: 'Für Rückfragen, Positionen oder einfach zum Kennenlernen.',
+		intro: 'Am schnellsten per E-Mail.',
 		email: 'dennis@wiredu.cloud'
 	},
 	caseStudy: {
@@ -530,7 +532,7 @@ export const en: SiteContent = {
 					'Tested systematically before the first user reached the platform'
 				],
 				outcome:
-					'A platform that came into being together with its operating processes, instead of having them built around it later.',
+					'The platform went live together with its operations, deployment and release processes.',
 				stack: [
 					'Citrix Virtual Apps & Desktops',
 					'Citrix NetScaler',
@@ -555,7 +557,7 @@ export const en: SiteContent = {
 					'Managed the Ivanti personalization policies',
 					'Replaced manual routines with documented standard processes'
 				],
-				outcome: 'Operations no longer depend on individual people but on documented processes.',
+				outcome: 'The routines are documented and no longer tied to individual people.',
 				stack: ['Citrix Virtual Apps & Desktops', 'Ivanti', 'Active Directory', 'PowerShell']
 			}
 		]
@@ -571,7 +573,7 @@ export const en: SiteContent = {
 			},
 			{
 				title: 'Design operations before go-live',
-				body: 'A platform is not finished when it runs, but when it is clear how it gets operated, updated and released day to day. Those processes come together with the architecture, not after it.',
+				body: 'A platform is not finished when it runs, but when it is settled how it gets operated, updated and released. Those processes are designed together with the architecture.',
 				tools: [
 					'Citrix Virtual Apps & Desktops',
 					'Citrix NetScaler',
@@ -583,7 +585,7 @@ export const en: SiteContent = {
 			},
 			{
 				title: 'Hand over so it runs without me',
-				body: 'Anything that exists only in my head is a risk for the client. Documentation and SOPs are part of the delivery, not the job that comes after it.',
+				body: 'Documentation and SOPs are written alongside the work, not afterwards. Otherwise operations depend on whoever built them.',
 				tools: [
 					'Technical documentation',
 					'SOP authoring',
@@ -597,9 +599,7 @@ export const en: SiteContent = {
 	career: {
 		title: 'How I got here',
 		intro:
-			'I did not take the straight route into IT. I worked in wholesale purchasing, went back to school for a university entrance qualification, and worked my way into infrastructure through working-student roles.',
-		closing:
-			'Seven years separate the first working-student role from owning platforms with 15,000 users. What stayed: I learn systems by operating them.',
+			'Wholesale purchasing, a university entrance qualification via the second-chance route, working-student roles in administration, and virtualization since 2023.',
 		stations: [
 			{
 				id: 'hausladen',
@@ -649,7 +649,7 @@ export const en: SiteContent = {
 				period: '10/2020 - 02/2023',
 				year: '2020',
 				summary:
-					'Focused on human-computer interaction. Left when the work in IT consulting offered more substance than the degree.',
+					'Focused on human-computer interaction. Left before finishing to start in IT consulting.',
 				bullets: [
 					'Five semesters of media informatics with a focus on human-computer interaction',
 					'Left before finishing to start in IT consulting'
@@ -709,7 +709,7 @@ export const en: SiteContent = {
 		name: 'Tabiyume',
 		tagline: 'Trip-planning app',
 		description:
-			'Built entirely on my own, from the first idea to deployment. It works offline, syncs to the cloud, and lets people plan together in real time on an interactive map. The reason I also understand infrastructure from the perspective of the people building on it.',
+			'Built entirely on my own, from the first idea to deployment. It works offline, syncs to the cloud, and lets people plan together in real time on an interactive map.',
 		stack: TABIYUME_STACK,
 		link: 'https://www.tabiyume.de',
 		cta: 'View project',
@@ -729,7 +729,7 @@ export const en: SiteContent = {
 	},
 	contact: {
 		title: 'Contact',
-		intro: 'For questions, open positions, or simply to say hello.',
+		intro: 'Email is the quickest way to reach me.',
 		email: 'dennis@wiredu.cloud'
 	},
 	caseStudy: {

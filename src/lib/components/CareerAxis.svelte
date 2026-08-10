@@ -88,9 +88,6 @@
 					<div class="h-40 w-full sm:h-52 lg:h-[26rem]">
 						<CareerField {section} />
 					</div>
-					<p class="mt-6 max-w-[38ch] leading-relaxed text-ink-soft">
-						{content.career.closing}
-					</p>
 				</div>
 			</div>
 		</div>
