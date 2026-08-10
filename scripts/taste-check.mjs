@@ -49,6 +49,31 @@ const checks = [
 	['Hero top padding stays within 6rem', !/md:pt-(2[5-9]|[3-9]\d)/.test(files.hero)],
 	['Hero contains no redundant greeting', !files.hero.includes('content.hero.greeting')],
 	[
+		'Hero composition is asymmetric, not centred',
+		!files.hero.includes('md:text-center') &&
+			!files.hero.includes('md:items-center md:text-center') &&
+			files.hero.includes('absolute inset-y-0 right-0') &&
+			files.hero.includes('md:max-w-[30rem]')
+	],
+	[
+		'Hero name stacks one word per line',
+		/\.hero-word \{\s*display: block;/.test(files.hero) && !files.hero.includes('u00a0')
+	],
+	[
+		'Hero object reads as an object, not wallpaper',
+		!/h-\[1[3-9]\d%\]|h-\[[2-9]\d\d%\]/.test(files.hero)
+	],
+	[
+		'Hero CTAs stay on one line at 375px',
+		files.hero.includes('text-[0.8125rem]') && files.hero.includes('md:text-sm')
+	],
+	[
+		'Stats read as a hairline strip, not a boxed trio',
+		files.hero.includes('grid border-t border-ink/15 sm:grid-cols-3') &&
+			!/facet-rise[\s\S]*content\.stats/.test(files.hero) &&
+			!/content\.stats[\s\S]{0,600}text-7xl/.test(files.hero)
+	],
+	[
 		'Project cards share one equal grid',
 		files.projects.includes('md:grid-cols-2') &&
 			files.projects.includes('auto-rows-fr') &&
@@ -56,10 +81,37 @@ const checks = [
 	],
 	[
 		'Skills use a line-based competency matrix',
-		files.skills.includes('lg:grid-cols-[0.38fr_1fr]') &&
+		files.skills.includes('lg:grid-cols-[0.26fr_1fr]') &&
 			files.skills.includes('border-l border-accent-on-paper/40') &&
 			!files.skills.includes('cursor-default')
 	],
+	[
+		'Section headings carry two tiers instead of one',
+		files.styles.includes('.section-head {') &&
+			files.styles.includes('.section-head-quiet {') &&
+			// The three anchors carry the page, the supporting sections step back.
+			[files.projects, files.career, files.contact].every((file) =>
+				file.includes('class="section-head ')
+			) &&
+			[files.skills, read('src/lib/components/Certifications.svelte')].every((file) =>
+				file.includes('class="section-head-quiet ')
+			) &&
+			// No component may go back to the uniform text-5xl/6xl extrabold H2.
+			!/text-5xl font-extrabold tracking-tight/.test(sourceText)
+	],
+	[
+		'List markers are hairlines, not dots',
+		files.styles.includes('.rule-item {') &&
+			[files.projects, files.career].every(
+				(file) => file.includes('rule-item') && !/h-1 w-1 shrink-0 rounded-full/.test(file)
+			)
+	],
+	[
+		'Credentials break the layout family of the skills matrix',
+		!read('src/lib/components/Certifications.svelte').includes('lg:grid-cols-[0.48fr_1fr]') &&
+			read('src/lib/components/Certifications.svelte').includes('sm:grid-cols-3')
+	],
+	['Visible content uses no middle-dot separators', !/·/.test(files.content)],
 	[
 		'Facet vocabulary is centralized',
 		files.styles.includes('.facet-rise') &&

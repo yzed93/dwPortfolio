@@ -90,7 +90,7 @@ export const de: SiteContent = {
 		name: 'Dennis Wiredu',
 		role: 'Citrix Plattform & Cloud Engineer',
 		tagline:
-			'Ich baue und betreibe Virtualisierungs- und Cloud-Plattformen für bis zu 15.000 Nutzer. Daneben entwickle ich eigene Software, die im echten Einsatz läuft.',
+			'Ich baue und betreibe Virtualisierungs- und Cloud-Plattformen für bis zu 15.000 Nutzer.',
 		cta: 'Kontakt aufnehmen',
 		ctaSecondary: 'Werdegang ansehen'
 	},
@@ -206,7 +206,7 @@ export const de: SiteContent = {
 	career: {
 		title: 'Werdegang',
 		intro:
-			'Acht Stationen in München, vom kaufmännischen Einstieg bis zum Citrix Consultant. Für Details auf einen Punkt in der Karte klicken.',
+			'Acht Stationen in München, vom kaufmännischen Einstieg über das Abitur auf dem zweiten Bildungsweg bis zum Citrix Consultant.',
 		stations: [
 			{
 				id: 'hausladen',
@@ -340,10 +340,10 @@ export const de: SiteContent = {
 	certifications: {
 		title: 'Zertifizierungen',
 		items: [
-			{ name: 'Azure Virtual Desktop Specialty', issuer: 'Microsoft · AZ-140', year: '2024' },
+			{ name: 'Azure Virtual Desktop Specialty', issuer: 'Microsoft AZ-140', year: '2024' },
 			{
 				name: 'Security, Compliance and Identity Fundamentals',
-				issuer: 'Microsoft · SC-900',
+				issuer: 'Microsoft SC-900',
 				year: '2025'
 			},
 			{ name: 'Cybersecurity Certificate', issuer: 'Google', year: '2024' }
@@ -371,8 +371,7 @@ export const en: SiteContent = {
 	hero: {
 		name: 'Dennis Wiredu',
 		role: 'Citrix Platform & Cloud Engineer',
-		tagline:
-			'I build and run virtualization and cloud platforms for up to 15,000 users, and ship software on the side.',
+		tagline: 'I build and run virtualization and cloud platforms for up to 15,000 users.',
 		cta: 'Get in touch',
 		ctaSecondary: 'See career'
 	},
@@ -487,7 +486,7 @@ export const en: SiteContent = {
 	career: {
 		title: 'Career',
 		intro:
-			'Eight stops in Munich, from a commercial apprenticeship to Citrix consultant. Click a pin on the map for details.',
+			'Eight stops in Munich, from a commercial apprenticeship via a second-chance university entrance qualification to Citrix consultant.',
 		stations: [
 			{
 				id: 'hausladen',
@@ -622,10 +621,10 @@ export const en: SiteContent = {
 	certifications: {
 		title: 'Certifications',
 		items: [
-			{ name: 'Azure Virtual Desktop Specialty', issuer: 'Microsoft · AZ-140', year: '2024' },
+			{ name: 'Azure Virtual Desktop Specialty', issuer: 'Microsoft AZ-140', year: '2024' },
 			{
 				name: 'Security, Compliance and Identity Fundamentals',
-				issuer: 'Microsoft · SC-900',
+				issuer: 'Microsoft SC-900',
 				year: '2025'
 			},
 			{ name: 'Cybersecurity Certificate', issuer: 'Google', year: '2024' }

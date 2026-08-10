@@ -10,15 +10,13 @@
 	const groupIcons = [Cloud, TerminalWindow, BracketsCurly, Wrench];
 </script>
 
-<section id="skills" class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-[0.38fr_1fr] lg:gap-16">
+<!-- The heading column narrows with the heading: at the quiet tier a 0.38fr
+     column left the title stranded in dead space. -->
+<section id="skills" class="mx-auto grid max-w-6xl gap-6 px-4 py-16 sm:px-6 md:py-24 lg:grid-cols-[0.26fr_1fr] lg:gap-12">
 	<div>
-		<h2
-			use:reveal
-			class="font-[family-name:var(--font-display)] text-5xl font-extrabold tracking-tight text-ink md:text-6xl"
-		>
+		<h2 use:reveal class="section-head-quiet text-ink">
 			{content.skills.title}
 		</h2>
-		<div class="mt-6 h-1 w-20 bg-accent-on-paper" aria-hidden="true"></div>
 	</div>
 
 	<div class="border-t border-ink/20">

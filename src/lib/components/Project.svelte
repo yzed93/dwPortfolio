@@ -9,21 +9,23 @@
 	<div class="facet-fall mx-auto max-w-6xl bg-paper-raised px-6 py-16 sm:px-10 md:py-20">
 		<div class="grid items-center gap-10 lg:grid-cols-[0.68fr_1.32fr] lg:gap-14">
 			<div use:reveal>
-				<p class="text-sm font-semibold text-ink-faint">{content.project.title}</p>
+				<p class="text-sm font-medium text-ink-faint">{content.project.title}</p>
 				<h2
-					class="mt-2 font-[family-name:var(--font-display)] text-6xl font-extrabold tracking-tight text-accent-on-paper md:text-8xl"
+					class="mt-2 font-[family-name:var(--font-display)] text-[clamp(2.75rem,5.4vw,4.25rem)] leading-none font-extrabold tracking-[-0.045em] text-accent-on-paper"
 				>
 					{content.project.name}
 				</h2>
-				<p class="mt-2 text-xl font-semibold text-ink">{content.project.tagline}</p>
+				<p class="mt-3 text-lg font-semibold text-ink">{content.project.tagline}</p>
 
-				<p class="mt-6 max-w-[55ch] text-lg leading-relaxed text-ink-soft">
+				<p class="mt-6 max-w-[52ch] leading-relaxed text-ink-soft">
 					{content.project.description}
 				</p>
 
-				<ul class="mt-7 grid grid-cols-2 border-t border-ink/15">
+				<!-- Grouped as a plain two-column index: the stack is supporting
+				     detail, not a spec sheet that needs a rule under every entry. -->
+				<ul class="mt-8 grid grid-cols-2 gap-x-6 gap-y-2 border-t border-ink/15 pt-5">
 					{#each content.project.stack as tech (tech)}
-						<li class="border-b border-ink/15 py-2.5 pr-3 text-sm text-ink-soft">
+						<li class="text-sm text-ink-soft">
 							{tech}
 						</li>
 					{/each}

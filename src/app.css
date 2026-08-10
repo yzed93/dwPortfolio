@@ -139,6 +139,50 @@ html {
 	outline-offset: 4px;
 }
 
+/*
+	Two heading tiers instead of one. Every section used to shout at the same
+	size and weight, which flattens the page: the reader gets no signal about
+	which sections carry the argument. `section-head` marks the three anchors
+	(Projekte, Werdegang, Kontakt), `section-head-quiet` the supporting ones.
+*/
+.section-head {
+	font-family: var(--font-display);
+	font-size: clamp(2.5rem, 4.6vw, 3.5rem);
+	font-weight: 800;
+	line-height: 0.95;
+	letter-spacing: -0.04em;
+}
+
+.section-head-quiet {
+	font-family: var(--font-display);
+	font-size: clamp(1.75rem, 2.6vw, 2.25rem);
+	font-weight: 700;
+	line-height: 1.05;
+	letter-spacing: -0.03em;
+}
+
+/*
+	List markers are hairlines, not dots. The page already speaks in 1px rules
+	(skill matrix, credential rows, section dividers); round bullets were a
+	second, weaker vocabulary sitting on top of it. `currentColor` lets the
+	same rule work on the bordeaux fills and on the dark cards.
+*/
+.rule-item {
+	position: relative;
+	padding-left: 1.05rem;
+}
+
+.rule-item::before {
+	position: absolute;
+	top: 0.62em;
+	left: 0;
+	width: 0.5rem;
+	height: 1px;
+	content: '';
+	background: currentColor;
+	opacity: 0.5;
+}
+
 /* One geometric vocabulary derived from the facets in the hero object. */
 .facet-rise {
 	clip-path: polygon(0 var(--facet-cut), 100% 0, 100% 100%, 0 100%);

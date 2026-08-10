@@ -168,13 +168,12 @@
 
 <section id="career" class="relative px-4 py-4 sm:px-6">
 	<div class="facet-rise mx-auto max-w-6xl bg-signal px-6 py-16 sm:px-10 md:py-20">
-		<h2
-			use:reveal
-			class="font-[family-name:var(--font-display)] text-5xl font-extrabold tracking-tight text-on-signal md:text-6xl"
-		>
+		<h2 use:reveal class="section-head text-on-signal">
 			{content.career.title}
 		</h2>
-		<p class="mt-3 max-w-[58ch] text-lg font-medium text-on-signal">{content.career.intro}</p>
+		<p class="mt-4 max-w-[56ch] text-lg leading-relaxed font-medium text-on-signal">
+			{content.career.intro}
+		</p>
 
 		<div
 			class="career-swipe -mx-6 mt-8 snap-x snap-mandatory scroll-px-6 overflow-x-auto overscroll-x-contain px-6 pb-3 touch-pan-x md:hidden"
@@ -198,8 +197,7 @@
 
 						<ul class="mt-5 space-y-2.5">
 							{#each station.bullets as bullet (bullet)}
-								<li class="flex gap-2.5 text-sm leading-relaxed text-card-ink-soft">
-									<span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-card-accent"></span>
+								<li class="rule-item text-sm leading-relaxed text-card-ink-soft">
 									{bullet}
 								</li>
 							{/each}
@@ -283,10 +281,9 @@
 						<p class="mt-1 font-semibold text-card-accent">{selected.role}</p>
 						<p class="mt-3 text-sm leading-relaxed text-card-ink-soft">{selected.summary}</p>
 
-						<ul class="mt-4 space-y-1.5">
+						<ul class="mt-4 space-y-2">
 							{#each selected.bullets as bullet (bullet)}
-								<li class="flex gap-2.5 text-sm text-card-ink-soft">
-									<span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-card-accent"></span>
+								<li class="rule-item text-sm leading-relaxed text-card-ink-soft">
 									{bullet}
 								</li>
 							{/each}
