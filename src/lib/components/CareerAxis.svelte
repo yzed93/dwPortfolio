@@ -13,8 +13,23 @@
 	let stations = $derived(content.career.stations);
 </script>
 
-<section id="career" bind:this={section} class="relative px-4 py-16 sm:px-6 md:py-24">
-	<div class="mx-auto max-w-6xl">
+<section id="career" bind:this={section} class="relative overflow-hidden px-4 py-16 sm:px-6 md:py-24">
+	<!--
+		The field sits behind the stations rather than in a column beside them.
+		As a column it dropped below the axis on any viewport under 1024px, which
+		is most laptop windows that are not maximised. Behind, it is one
+		composition at every width, and the reading order never changes.
+
+		Readability is protected twice over: the field is masked away across the
+		left of the section so it never sits behind the start of a line, and its
+		points cover under one percent of their own area even when fully
+		resolved.
+	-->
+	<div class="career-field pointer-events-none absolute inset-y-0 right-0 w-full" aria-hidden="true">
+		<CareerField {section} />
+	</div>
+
+	<div class="relative mx-auto max-w-6xl">
 		<h2 use:reveal class="section-head text-ink">
 			{content.career.title}
 		</h2>
@@ -22,7 +37,7 @@
 			{content.career.intro}
 		</p>
 
-		<div class="mt-12 grid gap-10 lg:grid-cols-[1fr_0.72fr] lg:gap-16">
+		<div class="mt-12">
 			<!--
 				The axis. The rule to the left of the stations is dashed for the
 				commercial years and solid from the second-chance Abitur onwards, so
@@ -77,24 +92,35 @@
 				{/each}
 			</ol>
 
-			<!--
-				The field sticks while the axis scrolls past it, so the reader sees
-				the same object resolve from scattered points into an ordered
-				lattice across the eight stations. That is the whole argument of the
-				section in one image.
-			-->
-			<div class="order-first lg:order-none">
-				<div class="lg:sticky lg:top-28">
-					<div class="h-40 w-full sm:h-52 lg:h-[26rem]">
-						<CareerField {section} />
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 </section>
 
 <style>
+	/*
+		Masked away across the left of the section, so the points only ever
+		appear to the right of where the station text lives. The fade is wide on
+		purpose: a hard edge would read as a panel boundary and reintroduce the
+		two-column look this replaced.
+	*/
+	.career-field {
+		opacity: 0.5;
+		-webkit-mask-image: linear-gradient(to right, transparent 22%, black 62%);
+		mask-image: linear-gradient(to right, transparent 22%, black 62%);
+	}
+
+	/*
+		On a phone the text runs the full width, so there is no empty right side
+		to hide in. The field stays as a faint texture instead of a figure.
+	*/
+	@media (max-width: 767px) {
+		.career-field {
+			opacity: 0.3;
+			-webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 92%);
+			mask-image: linear-gradient(to bottom, black 55%, transparent 92%);
+		}
+	}
+
 	.axis-line.is-solid {
 		background: color-mix(in srgb, var(--color-accent-on-paper) 38%, transparent);
 	}

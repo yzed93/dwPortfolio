@@ -183,8 +183,27 @@ const checks = [
 	[
 		'Points are drawn in bands rather than one context state change each',
 		files.careerField.includes('const BANDS') &&
-			// 416 points collapse to at most one fill per band.
+			// Every point collapses into at most one fill per band.
 			/for \(let b = 0; b < BANDS; b\+\+\)/.test(files.careerField)
+	],
+	[
+		'The field is a backdrop, not a second column',
+		// As a column it dropped below the axis under 1024px. Behind the
+		// stations it holds at every width and the reading order never moves.
+		files.careerAxis.includes('career-field') &&
+			files.careerAxis.includes('absolute inset-y-0 right-0') &&
+			!files.careerAxis.includes('lg:grid-cols-') &&
+			!files.careerAxis.includes('order-first') &&
+			// Masked off the left, so no point ever sits behind a line start.
+			files.careerAxis.includes('mask-image: linear-gradient(to right')
+	],
+	[
+		'The field grid is derived from its box, so cells stay square',
+		files.careerField.includes('const CELL') &&
+			files.careerField.includes('const MAX_POINTS') &&
+			// A fixed row count would stretch cells into stripes now that the
+			// field spans a whole section rather than a fixed panel.
+			!/const (COLS|ROWS) =/.test(files.careerField)
 	],
 	[
 		'No closing reflection on the career axis',

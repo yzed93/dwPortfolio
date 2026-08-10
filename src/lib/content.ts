@@ -284,9 +284,9 @@ export const de: SiteContent = {
 		]
 	},
 	career: {
-		title: 'Der Weg hierher',
+		title: 'Werdegang',
 		intro:
-			'Einkauf im Großhandel, Abitur auf dem zweiten Bildungsweg, Werkstudentenstellen in der Administration, seit 2023 Virtualisierung.',
+			'Ich habe im Einkauf gearbeitet, das Abitur auf dem zweiten Bildungsweg nachgeholt, bin über Werkstudentenstellen in die IT eingestiegen und arbeite seit 2023 in der Virtualisierung.',
 		stations: [
 			{
 				id: 'hausladen',
@@ -597,9 +597,9 @@ export const en: SiteContent = {
 		]
 	},
 	career: {
-		title: 'How I got here',
+		title: 'Career',
 		intro:
-			'Wholesale purchasing, a university entrance qualification via the second-chance route, working-student roles in administration, and virtualization since 2023.',
+			'I worked in purchasing, took the second-chance route to a university entrance qualification, moved into IT through working-student roles, and have worked in virtualization since 2023.',
 		stations: [
 			{
 				id: 'hausladen',

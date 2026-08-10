@@ -10,9 +10,16 @@
 	let wrap = $state<HTMLDivElement | null>(null);
 	let canvas = $state<HTMLCanvasElement | null>(null);
 
-	const COLS = 26;
-	const ROWS = 16;
-	const COUNT = COLS * ROWS;
+	/*
+		The grid is derived from the box rather than fixed, because the field now
+		spans a whole section and its aspect ratio changes with the content. A
+		fixed column and row count would stretch the cells: at 1150 by 1760 a
+		26 by 16 grid gives cells of 44 by 110, which reads as stripes, not as a
+		lattice. Deriving both from one target cell size keeps cells square at
+		any size, and the cap keeps the point count bounded on tall sections.
+	*/
+	const CELL = 38;
+	const MAX_POINTS = 1400;
 
 	/*
 		Points are drawn in quantised bands rather than one at a time. Every
@@ -43,6 +50,9 @@
 		let height = 0;
 		let frame = 0;
 		let visible = false;
+		let cols = 1;
+		let rows = 1;
+		let count = 0;
 
 		// Colours come from the theme tokens rather than literals, so the field
 		// follows the palette and the light route without a second definition.
@@ -83,6 +93,17 @@
 			canvas.width = Math.round(width * dpr);
 			canvas.height = Math.round(height * dpr);
 			ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+			// One target cell size drives both axes, so cells stay square. If that
+			// would exceed the budget, the cell grows until the grid fits.
+			let cell = CELL;
+			do {
+				cols = Math.max(2, Math.round(width / cell));
+				rows = Math.max(2, Math.round(height / cell));
+				cell *= 1.15;
+			} while (cols * rows > MAX_POINTS);
+			count = cols * rows;
+
 			measureSection();
 		}
 
@@ -153,18 +174,18 @@
 			ctx.clearRect(0, 0, width, height);
 
 			// The lattice is inset so the outermost points do not sit on the edge.
-			const padX = width * 0.06;
-			const padY = height * 0.08;
-			const stepX = (width - padX * 2) / (COLS - 1);
-			const stepY = (height - padY * 2) / (ROWS - 1);
+			const padX = width * 0.04;
+			const padY = height * 0.03;
+			const stepX = (width - padX * 2) / (cols - 1);
+			const stepY = (height - padY * 2) / (rows - 1);
 
 			// One bucket per settle band; each collects the points that share a
 			// colour, alpha and radius this frame.
 			const bands: { x: number; y: number }[][] = Array.from({ length: BANDS }, () => []);
 
-			for (let i = 0; i < COUNT; i++) {
-				const col = i % COLS;
-				const row = (i / COLS) | 0;
+			for (let i = 0; i < count; i++) {
+				const col = i % cols;
+				const row = (i / cols) | 0;
 
 				const orderedX = padX + col * stepX;
 				const orderedY = padY + row * stepY;
@@ -186,7 +207,7 @@
 				const MAX_DELAY = 0.5;
 				const SETTLE = 1 - MAX_DELAY;
 				const delay =
-					(col / (COLS - 1)) * (MAX_DELAY * 0.84) + noise(i + 17.3) * (MAX_DELAY * 0.16);
+					(col / (cols - 1)) * (MAX_DELAY * 0.84) + noise(i + 17.3) * (MAX_DELAY * 0.16);
 				const local = Math.min(Math.max((value - delay) / SETTLE, 0), 1);
 				// easeOutCubic: entering elements start fast, which is what makes
 				// arrival read as arrival rather than as drift.
