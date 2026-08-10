@@ -115,11 +115,16 @@ const checks = [
 			files.cvButton.includes('download')
 	],
 	[
-		'The facts bar is gone and its figure lives in the positioning line',
+		'The facts bar is gone and the scale figure is only claimed where it is shown',
 		!files.content.includes('stats:') &&
 			!sourceText.includes('countUp') &&
 			files.hero.includes('content.hero.positioning') &&
-			/positioning:[\s\S]{0,120}15\.000/.test(files.content)
+			// The platform list right below carries 15.000+, 7.000 and 700 in its
+			// own column. Repeating the largest of them in the hero states a number
+			// before any evidence for it, which is the difference between saying
+			// what you do and boasting about it.
+			!/positioning:[^\n]*15[.,]000/.test(files.content) &&
+			/scaleValue: '15\.000\+'/.test(files.content)
 	],
 	[
 		'Platforms lead the page, ordered by scale, linking to their own pages',
@@ -312,21 +317,25 @@ const checks = [
 	]
 ];
 
+/*
+	The CV is a download rather than a page asset, so its weight never blocks a
+	render, but it does travel in full to every reader who clicks it. This was a
+	soft note while the shipped export was 8.6 MB; now that a 0.4 MB version
+	exists the budget is a real one, because a silent regression back to the
+	unoptimised export is the likely failure and nothing else would catch it.
+*/
+const cvPath = new URL('../static/docs/Lebenslauf_Dennis_Wiredu.pdf', import.meta.url);
+const cvMb = existsSync(cvPath) ? statSync(cvPath).size / 1e6 : Infinity;
+checks.push(['CV download stays within its weight budget', cvMb <= 2]);
+
 let failed = 0;
 for (const [label, passed] of checks) {
 	console.log(`${passed ? 'PASS' : 'FAIL'}  ${label}`);
 	if (!passed) failed += 1;
 }
 
-// The CV is a download, not a page asset, so its weight never blocks a render.
-// It still travels to every visitor who clicks it, so a regression into a
-// very large export should be visible rather than silent.
-const cvPath = new URL('../static/docs/Lebenslauf_Dennis_Wiredu.pdf', import.meta.url);
-if (existsSync(cvPath)) {
-	const mb = statSync(cvPath).size / 1e6;
-	if (mb > 4) {
-		console.log(`\nNOTE  CV is ${mb.toFixed(1)} MB. Re-export below 4 MB when convenient.`);
-	}
+if (Number.isFinite(cvMb)) {
+	console.log(`\nCV: ${cvMb.toFixed(2)} MB of a 2 MB budget.`);
 }
 
 if (failed > 0) {

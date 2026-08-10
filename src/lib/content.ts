@@ -141,8 +141,7 @@ export const de: SiteContent = {
 	hero: {
 		name: 'Dennis Wiredu',
 		role: 'Citrix Plattform & Cloud Engineer',
-		positioning:
-			'Ich baue und betreibe Virtualisierungs- und Cloud-Plattformen für 700 bis über 15.000 Nutzer.',
+		positioning: 'Ich baue Virtualisierungs- und Cloud-Plattformen und halte sie im Betrieb.',
 		ctaContact: 'Kontakt aufnehmen',
 		ctaCv: 'Lebenslauf (PDF)'
 	},
@@ -459,8 +458,7 @@ export const en: SiteContent = {
 	hero: {
 		name: 'Dennis Wiredu',
 		role: 'Citrix Platform & Cloud Engineer',
-		positioning:
-			'I build and run virtualization and cloud platforms for 700 to over 15,000 users.',
+		positioning: 'I build virtualization and cloud platforms, and keep them running.',
 		ctaContact: 'Get in touch',
 		ctaCv: 'CV (PDF)'
 	},
