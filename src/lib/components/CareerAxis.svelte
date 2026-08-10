@@ -10,8 +10,17 @@
 
 	// Stored oldest-first; the axis reads that way on purpose. The arc only
 	// works forwards: purchasing, then school, then infrastructure. Where it
-	// turns is carried by the rule going from dashed to solid, not by a label.
+	// turns is carried by the rule going from dashed to solid and by two quiet
+	// phase labels, so the change can be scanned as well as discovered.
 	let stations = $derived(content.career.stations);
+	let presentLabel = $derived(content.career.title === 'Werdegang' ? 'heute' : 'present');
+
+	function phaseLabel(track: 'commercial' | 'it') {
+		if (content.career.title === 'Werdegang') {
+			return track === 'commercial' ? 'Kaufmännischer Weg' : 'Neustart in die IT';
+		}
+		return track === 'commercial' ? 'Commercial path' : 'New start in IT';
+	}
 </script>
 
 <section id="career" bind:this={section} class="relative overflow-hidden px-4 py-16 sm:px-6 md:py-24">
@@ -31,27 +40,47 @@
 	</div>
 
 	<div class="relative mx-auto max-w-6xl">
-		<h2 use:reveal class="section-head text-ink">
-			{content.career.title}
-		</h2>
-		<p class="mt-4 max-w-[58ch] text-lg leading-relaxed text-ink-soft">
-			{content.career.intro}
-		</p>
+		<div class="career-intro-grid">
+			<div>
+				<p class="figure mb-5 text-sm text-accent-on-paper">03</p>
+				<h2 use:reveal class="section-head text-ink">
+					{content.career.title}
+				</h2>
+				<p class="mt-5 max-w-[58ch] text-lg leading-relaxed text-ink-soft">
+					{content.career.intro}
+				</p>
+			</div>
 
-		<div class="mt-12">
+			<p class="career-range" aria-label="{stations[0]?.year} bis {presentLabel}">
+				<span>{stations[0]?.year}</span>
+				<span class="career-range-rule" aria-hidden="true"></span>
+				<span>{presentLabel}</span>
+			</p>
+		</div>
+
+		<div class="mt-16 md:mt-24">
 			<!--
 				The axis. The rule to the left of the stations is dashed for the
-				commercial years and solid from the second-chance Abitur onwards, so
-				the career change is visible without being labelled.
+				commercial years and solid from the second-chance Abitur onwards. The
+				phase labels make that career change explicit without interrupting it.
 			-->
 			<ol class="relative">
 				{#each stations as station, i (station.id)}
 					{@const isCurrent = i === stations.length - 1}
+					{@const isPhaseStart = i === 0 || stations[i - 1]?.track !== station.track}
 					<li
 						use:reveal={Math.min(i, 4) * 60}
 						class="station relative pb-9 pl-8 sm:pl-10"
 						class:is-open-ended={isCurrent}
+						class:is-current={isCurrent}
+						class:is-phase-start={isPhaseStart}
 					>
+						{#if isPhaseStart}
+							<p class="phase-label meta" data-phase={station.track}>
+								<span>{station.track === 'commercial' ? '01' : '02'}</span>
+								{phaseLabel(station.track)}
+							</p>
+						{/if}
 						<span
 							class="axis-line absolute top-2 bottom-0 left-0 w-px {station.track === 'it'
 								? 'is-solid'
@@ -66,48 +95,49 @@
 							aria-hidden="true"
 						></span>
 
-						<div>
-							<div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-								<span class="figure text-sm text-accent-on-paper">{station.year}</span>
-								<h3
-									class="font-[family-name:var(--font-display)] text-lg font-semibold text-ink {isCurrent
-										? 'md:text-xl'
-										: ''}"
-								>
-									{station.company}
-								</h3>
+						<div class="station-panel">
+							<div class="station-grid">
+								<div class="station-time">
+									<span class="station-year figure text-accent-on-paper">{station.year}</span>
+									<span class="meta mt-1 block text-ink-faint">{station.period}</span>
+								</div>
+
+								<div class="station-copy">
+									<h3 class="station-company font-[family-name:var(--font-display)] font-semibold text-ink">
+										{station.company}
+									</h3>
+									<p class="mt-1 text-sm font-medium text-ink-soft">{station.role}</p>
+									<p class="mt-4 max-w-[60ch] leading-relaxed text-ink-soft">{station.summary}</p>
+
+									<!--
+										Four of the eight stations carry detail beyond their one-line
+										summary, and until now it was written in the content file and
+										never rendered. Rather than pasting it all onto the axis and
+										losing the scan, it opens on request. The current role starts
+										open, because it is the one a reader came for.
+
+										Native details, so the keyboard, screen readers and a
+										no-JavaScript load all get it without anything being wired up.
+									-->
+									{#if station.bullets.length > 1}
+										<details class="station-detail mt-4" open={isCurrent}>
+											<summary class="meta inline-flex min-h-11 cursor-pointer items-center gap-2 text-ink-faint">
+												<span class="station-chevron" aria-hidden="true">
+													<CaretDown size={12} weight="bold" />
+												</span>
+												{content.career.detail}
+											</summary>
+											<ul class="mt-3 space-y-2">
+												{#each station.bullets as bullet (bullet)}
+													<li class="rule-item max-w-[60ch] text-sm leading-relaxed text-ink-soft">
+														{bullet}
+													</li>
+												{/each}
+											</ul>
+										</details>
+									{/if}
+								</div>
 							</div>
-							<p class="mt-1 text-sm font-medium text-ink-soft">{station.role}</p>
-							<p class="meta mt-1 text-ink-faint">{station.period}</p>
-							<p class="mt-3 max-w-[60ch] leading-relaxed text-ink-soft">{station.summary}</p>
-
-							<!--
-								Four of the eight stations carry detail beyond their one-line
-								summary, and until now it was written in the content file and
-								never rendered. Rather than pasting it all onto the axis and
-								losing the scan, it opens on request. The current role starts
-								open, because it is the one a reader came for.
-
-								Native details, so the keyboard, screen readers and a
-								no-JavaScript load all get it without anything being wired up.
-							-->
-							{#if station.bullets.length > 1}
-								<details class="station-detail mt-4" open={isCurrent}>
-									<summary class="meta inline-flex min-h-11 cursor-pointer items-center gap-2 text-ink-faint">
-										<span class="station-chevron" aria-hidden="true">
-											<CaretDown size={12} weight="bold" />
-										</span>
-										{content.career.detail}
-									</summary>
-									<ul class="mt-3 space-y-2">
-										{#each station.bullets as bullet (bullet)}
-											<li class="rule-item max-w-[60ch] text-sm leading-relaxed text-ink-soft">
-												{bullet}
-											</li>
-										{/each}
-									</ul>
-								</details>
-							{/if}
 						</div>
 					</li>
 				{/each}
@@ -118,6 +148,142 @@
 </section>
 
 <style>
+	.career-intro-grid {
+		display: grid;
+		gap: 3rem;
+		align-items: end;
+	}
+
+	.career-range {
+		display: grid;
+		grid-template-columns: auto minmax(2rem, 1fr) auto;
+		gap: 0.7rem;
+		align-items: center;
+		margin: 0;
+		font-family: var(--font-mono);
+		font-size: clamp(2.5rem, 9vw, 7rem);
+		font-variant-numeric: tabular-nums;
+		font-weight: 500;
+		line-height: 0.8;
+		letter-spacing: -0.09em;
+		color: var(--color-ink);
+		white-space: nowrap;
+	}
+
+	.career-range span:last-child {
+		color: var(--color-accent-on-paper);
+	}
+
+	.career-range-rule {
+		height: 2px;
+		background: var(--color-accent-on-paper);
+		opacity: 0.75;
+	}
+
+	.phase-label {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		margin: 0 0 1.5rem;
+		color: var(--color-ink-faint);
+		font-weight: 560;
+		letter-spacing: 0.02em;
+		white-space: nowrap;
+	}
+
+	.phase-label::after {
+		min-width: 2rem;
+		flex: 1;
+		height: 1px;
+		content: '';
+		background: color-mix(in srgb, var(--color-ink) 18%, transparent);
+	}
+
+	.phase-label span,
+	.phase-label[data-phase='it'] {
+		color: var(--color-accent-on-paper);
+	}
+
+	.station.is-phase-start:not(:first-child) {
+		margin-top: 3rem;
+	}
+
+	.station-panel {
+		padding-top: 1.4rem;
+		border-top: 1px solid color-mix(in srgb, var(--color-ink) 14%, transparent);
+	}
+
+	.station-grid {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.station-year {
+		display: block;
+		font-size: clamp(1.75rem, 3vw, 2.75rem);
+		line-height: 0.95;
+		letter-spacing: -0.08em;
+	}
+
+	.station-company {
+		font-size: clamp(1.45rem, 2.4vw, 2rem);
+		line-height: 1.02;
+		letter-spacing: -0.03em;
+	}
+
+	.station.is-current .station-panel {
+		position: relative;
+		margin-left: -1rem;
+		padding: 2rem 1.25rem 2.25rem;
+		border-top: 3px solid var(--color-accent-on-paper);
+		background: color-mix(in srgb, var(--color-accent-on-paper) 6%, var(--color-paper-raised));
+	}
+
+	.station.is-current .station-panel::after {
+		position: absolute;
+		right: 1.25rem;
+		bottom: 1rem;
+		width: clamp(3rem, 9vw, 7rem);
+		height: 1px;
+		content: '';
+		background: var(--color-accent-on-paper);
+	}
+
+	.station.is-current .station-year {
+		font-size: clamp(2.7rem, 5.5vw, 4.75rem);
+	}
+
+	.station.is-current .station-company {
+		font-size: clamp(1.8rem, 3.4vw, 2.75rem);
+	}
+
+	.station.is-current .station-node {
+		width: 0.75rem;
+		height: 0.75rem;
+	}
+
+	@media (min-width: 768px) {
+		.career-intro-grid {
+			grid-template-columns: minmax(0, 0.9fr) minmax(20rem, 1.1fr);
+			gap: clamp(3rem, 8vw, 7rem);
+		}
+
+		.career-range {
+			padding-bottom: 0.3rem;
+		}
+
+		.station-grid {
+			grid-template-columns: minmax(7rem, 0.23fr) minmax(0, 1fr);
+			gap: clamp(2rem, 5vw, 5rem);
+			align-items: start;
+		}
+
+		.station.is-current .station-panel {
+			margin-left: -2rem;
+			padding: 2.5rem 2rem 3rem;
+		}
+	}
+
 	/*
 		Masked away across the left of the section, so the points only ever
 		appear to the right of where the station text lives. The fade is wide on

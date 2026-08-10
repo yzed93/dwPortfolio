@@ -2,25 +2,15 @@
 
 @import '@fontsource-variable/geist';
 @import '@fontsource-variable/geist-mono';
+@import '@fontsource-variable/newsreader';
 
 /*
-	Dark is the default here; `[data-theme='light']` below is the alternative,
-	served by the /light route for comparison.
+	The site uses one light editorial palette. The legacy `/light` comparison
+	route still sets its data attribute, so both token scopes intentionally carry
+	the same values until that route is removed.
 
-	Plain `@theme` on purpose, not `@theme inline`: inline bakes the literal
-	values into every utility, which would make those overrides do nothing.
-
-	Surface pairs
-	  paper / ink   invert between themes. `paper` is always the page, `ink` is
-	                always the opposite surface, so `bg-ink` blocks read as light
-	                cards on the dark theme and dark cards on the light one.
-
-	Accent tokens are named after the surface they sit on, because the readable
-	shade of the bordeaux differs per surface and flips with the theme:
-	  signal            the bordeaux fill itself, identical in both themes
-	  on-signal         text drawn on that fill (pale, 9.9:1)
-	  accent-on-paper   accent text on the page background
-	  accent-on-ink     accent text on an `ink` card
+	Plain `@theme` on purpose, not `@theme inline`: inline would bake literal
+	values into each utility and prevent scoped token overrides.
 */
 @theme {
 	/*
@@ -29,7 +19,7 @@
 		"how big were these platforms", the numbers deserve their own voice, and
 		tabular figures keep columns of years from wobbling.
 	*/
-	--font-display: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-display: 'Newsreader Variable', ui-serif, Georgia, serif;
 	--font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
 	--font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
 
@@ -41,70 +31,56 @@
 	--ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 	--ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
 
-	/* Ink-blue neutrals keep the page cool and let bordeaux remain the accent. */
-	--color-paper: #070a14;
-	--color-paper-raised: #111626;
-	--color-ink: #eff2f8;
-	--color-ink-soft: #aab3c5;
-	--color-ink-faint: #78849a;
-	--color-line: #293149;
+	/* Warm editorial paper, graphite type and one decisive cobalt accent. */
+	--color-paper: #f3f0e8;
+	--color-paper-raised: #e8e3d8;
+	--color-ink: #191b19;
+	--color-ink-soft: #50534f;
+	--color-ink-faint: #777b75;
+	--color-line: #cbc6ba;
 
-	/*
-		Bordeaux is dark, so unlike a bright accent it carries LIGHT text when
-		used as a fill. That is why `on-signal` is the pale tone.
-	*/
-	--color-signal: #7a143a;
-	--color-on-signal: #f7eef2;
-	--color-accent-on-paper: #db3e70;
-	--color-accent-on-ink: #7a143a;
-	--color-hero-wine: #7a143a;
-	--color-hero-wine-light: #bd2052;
-	--color-hero-blue: #0b2450;
-	--color-hero-blue-light: #2d5d9a;
+	/* Cobalt is the only accent; white text gives the filled CTA 7.2:1 contrast. */
+	--color-signal: #3157c8;
+	--color-on-signal: #ffffff;
+	--color-accent-on-paper: #3157c8;
+	--color-accent-on-ink: #9bb0f2;
+	--color-hero-wine: #3157c8;
+	--color-hero-wine-light: #7089dc;
+	--color-hero-blue: #1d3b91;
+	--color-hero-blue-light: #9bb0f2;
 
-	/*
-		Content cards follow the page theme. In dark mode they stay inside the
-		ink-blue surface family rather than interrupting it with pale cards.
-	*/
-	--color-card: #111626;
-	--color-card-border: #293149;
-	--color-card-ink: #eff2f8;
-	--color-card-ink-soft: #aab3c5;
-	--color-card-ink-faint: #78849a;
-	/*
-		One step lighter than `accent-on-paper`: the same pink only reaches
-		4.23:1 on the raised card surface, which misses AA for body text.
-	*/
-	--color-card-accent: #e04c7b;
-	--color-card-line: #293149;
+	/* Content surfaces remain in the same warm paper family. */
+	--color-card: #faf8f2;
+	--color-card-border: #cbc6ba;
+	--color-card-ink: #191b19;
+	--color-card-ink-soft: #50534f;
+	--color-card-ink-faint: #777b75;
+	--color-card-accent: #3157c8;
+	--color-card-line: #cbc6ba;
 }
 
 [data-theme='light'] {
-	--color-paper: #f4f6fa;
-	--color-paper-raised: #e9edf4;
-	--color-ink: #0b1020;
-	--color-ink-soft: #45516a;
-	--color-ink-faint: #66728a;
-	--color-line: #ccd4e1;
+	--color-paper: #f3f0e8;
+	--color-paper-raised: #e8e3d8;
+	--color-ink: #191b19;
+	--color-ink-soft: #50534f;
+	--color-ink-faint: #777b75;
+	--color-line: #cbc6ba;
 
-	/*
-		The accent flips with the surface: deep bordeaux where the background is
-		light, pale bordeaux where it is dark. The signal fill itself stays put.
-	*/
-	--color-accent-on-paper: #7a143a;
-	--color-accent-on-ink: #db3e70;
+	--color-accent-on-paper: #3157c8;
+	--color-accent-on-ink: #9bb0f2;
 
-	--color-card: #f4f6fa;
-	--color-card-border: #293149;
-	--color-card-ink: #0b1020;
-	--color-card-ink-soft: #45516a;
-	--color-card-ink-faint: #66728a;
-	--color-card-accent: #7a143a;
-	--color-card-line: #ccd4e1;
+	--color-card: #faf8f2;
+	--color-card-border: #cbc6ba;
+	--color-card-ink: #191b19;
+	--color-card-ink-soft: #50534f;
+	--color-card-ink-faint: #777b75;
+	--color-card-accent: #3157c8;
+	--color-card-line: #cbc6ba;
 }
 
 html {
-	color-scheme: dark;
+	color-scheme: light;
 }
 
 html[data-theme='light'] {
@@ -112,18 +88,14 @@ html[data-theme='light'] {
 }
 
 body {
-	background:
-		radial-gradient(
-			circle at 8% 24%,
-			color-mix(in srgb, var(--color-hero-wine) 15%, transparent) 0,
-			transparent 30rem
-		),
-		radial-gradient(
-			circle at 92% 62%,
-			color-mix(in srgb, var(--color-hero-blue-light) 12%, transparent) 0,
-			transparent 34rem
-		),
-		var(--color-paper);
+	background-color: var(--color-paper);
+	background-image: repeating-linear-gradient(
+		90deg,
+		transparent 0,
+		transparent calc(8.333vw - 1px),
+		color-mix(in srgb, var(--color-ink) 2.4%, transparent) calc(8.333vw - 1px),
+		color-mix(in srgb, var(--color-ink) 2.4%, transparent) 8.333vw
+	);
 	color: var(--color-ink);
 	font-family: var(--font-sans);
 	-webkit-font-smoothing: antialiased;
@@ -157,15 +129,15 @@ html {
 .section-head {
 	font-family: var(--font-display);
 	font-size: clamp(2.25rem, 4.2vw, 3.25rem);
-	font-weight: 700;
-	line-height: 1;
-	letter-spacing: -0.035em;
+	font-weight: 570;
+	line-height: 0.98;
+	letter-spacing: -0.04em;
 }
 
 .section-head-quiet {
 	font-family: var(--font-display);
 	font-size: clamp(1.625rem, 2.4vw, 2rem);
-	font-weight: 650;
+	font-weight: 560;
 	line-height: 1.1;
 	letter-spacing: -0.025em;
 }

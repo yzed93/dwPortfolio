@@ -64,6 +64,7 @@
 <section id="contact" class="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
 	<div use:reveal class="grid gap-10 border-t border-ink/15 pt-10 lg:grid-cols-[1fr_0.62fr] lg:gap-16">
 		<div>
+			<p class="figure mb-5 text-sm text-accent-on-paper">05</p>
 			<h2 class="section-head text-ink">{content.contact.title}</h2>
 			<p class="mt-4 max-w-[44ch] leading-relaxed text-ink-soft">{content.contact.intro}</p>
 
@@ -163,10 +164,25 @@
 	}
 
 	.copy-button {
+		position: relative;
+		overflow: hidden;
 		transition:
 			transform 160ms var(--ease-out-strong),
 			border-color 200ms var(--ease-out-strong),
 			color 200ms var(--ease-out-strong);
+	}
+
+	.copy-button::after {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		height: 2px;
+		content: '';
+		background: var(--color-accent-on-paper);
+		transform: scaleX(0);
+		transform-origin: left center;
+		transition: transform 220ms var(--ease-out-strong);
 	}
 
 	.copy-button:active {
@@ -179,12 +195,26 @@
 		color: var(--color-accent-on-paper);
 	}
 
+	.copy-button[data-state='copied']::after,
+	.copy-button[data-state='selected']::after {
+		transform: scaleX(1);
+	}
+
+	.copy-button[data-state='copied'] .copy-icon,
+	.copy-button[data-state='selected'] .copy-icon {
+		transform: translateY(-1px) scale(1.08);
+	}
+
 	.copy-icon,
 	.copy-label {
 		display: grid;
 		grid-template-areas: 'stack';
 		align-items: center;
 		justify-items: start;
+	}
+
+	.copy-icon {
+		transition: transform 180ms var(--ease-out-strong);
 	}
 
 	.copy-label .copy-face {
@@ -212,6 +242,19 @@
 		.contact-mail,
 		.copy-button {
 			transition-property: border-color, color;
+		}
+		.copy-button::after {
+			transition-property: opacity;
+			transform: scaleX(1);
+			opacity: 0;
+		}
+		.copy-button[data-state='copied']::after,
+		.copy-button[data-state='selected']::after {
+			opacity: 1;
+		}
+		.copy-button[data-state='copied'] .copy-icon,
+		.copy-button[data-state='selected'] .copy-icon {
+			transform: none;
 		}
 		.copy-button:active {
 			transform: none;

@@ -23,7 +23,7 @@ const sourceText = readdirSync(sourceRoot, { recursive: true })
 
 const files = {
 	hero: read('src/lib/components/Hero.svelte'),
-	mobileHero: read('src/lib/components/MobileHeroParticles.svelte'),
+	architecturePlate: read('src/lib/components/ArchitecturePlate.svelte'),
 	platforms: read('src/lib/components/Platforms.svelte'),
 	approach: read('src/lib/components/Approach.svelte'),
 	careerAxis: read('src/lib/components/CareerAxis.svelte'),
@@ -43,31 +43,67 @@ const files = {
 
 const checks = [
 	// ---------------------------------------------------------------- durable
-	['Hero fills one stable dynamic viewport', files.hero.includes('min-h-[100dvh]')],
-	['Hero top padding stays within 6rem', !/md:pt-(2[5-9]|[3-9]\d)/.test(files.hero)],
 	[
-		'Hero keeps a lightweight mobile visual',
-		files.mobileHero.includes('/images/portfolio-mobile-hero.jpg') &&
-			files.hero.includes('MobileHeroParticles') &&
-			files.mobileHero.includes('requestAnimationFrame') &&
-			files.mobileHero.includes('prefers-reduced-motion: reduce') &&
-			files.hero.includes('mobile-hero-art') &&
-			files.hero.includes("matchMedia('(min-width: 768px)')")
+		'Hero uses an editorial split instead of a centred stage',
+		files.hero.includes('lg:grid-cols-[1.08fr_0.92fr]') &&
+			files.hero.includes('<ArchitecturePlate />') &&
+			files.hero.includes('font-[family-name:var(--font-display)]')
+	],
+	['Hero leaves breathing room below the fixed navigation', files.hero.includes('md:pt-36')],
+	[
+		'Hero replaces the generative particle object with a lightweight topology',
+		// The two particle components and the three.js dependency they carried
+		// are gone rather than merely unused, so this asserts their absence from
+		// the tree instead of their absence from one import list.
+		!exists('src/lib/components/Hero3D.svelte') &&
+			!exists('src/lib/components/MobileHeroParticles.svelte') &&
+			!files.pkg.includes('"three"') &&
+			files.architecturePlate.includes('system-flow') &&
+			files.architecturePlate.includes('automation-band')
 	],
 	[
-		'Mobile hero separates the visual stage from readable copy',
-		files.hero.includes('mobile-hero-panel') &&
-			files.hero.includes('clip-path: polygon(0 3.5rem') &&
-			files.hero.includes('align-items: flex-start')
+		'Recruiter proof is visible in the first viewport',
+		files.architecturePlate.includes('Citrix CVAD') &&
+			files.architecturePlate.includes('PowerShell-Orchestrierung') &&
+			files.hero.includes('Citrix / Azure / PowerShell / Operations')
 	],
 	[
-		'Ink Blue Bordeaux palette stays locked',
-		files.styles.includes('--color-paper: #070a14') &&
-			files.styles.includes('--color-paper-raised: #111626') &&
-			files.styles.includes('--color-signal: #7a143a') &&
-			files.styles.includes('--color-accent-on-paper: #db3e70') &&
-			files.styles.includes('--color-hero-wine-light: #bd2052') &&
-			files.styles.includes('--color-hero-blue: #0b2450')
+		'Warm paper, graphite and cobalt palette stays locked',
+		files.styles.includes('--color-paper: #f3f0e8') &&
+			files.styles.includes('--color-paper-raised: #e8e3d8') &&
+			files.styles.includes('--color-ink: #191b19') &&
+			files.styles.includes('--color-signal: #3157c8') &&
+			files.styles.includes('--color-accent-on-paper: #3157c8')
+	],
+	[
+		'No orphaned components and no dependency without an import',
+		/*
+			A redesign that replaces a component usually leaves the old one behind,
+			still compiling and still costing a reader nothing but still there to
+			confuse the next person. Same for the package it pulled in. This is the
+			check that would have caught three.js sitting in the manifest with the
+			only file that imported it no longer rendered anywhere.
+		*/
+		(() => {
+			const componentDir = new URL('../src/lib/components/', import.meta.url);
+			const orphans = readdirSync(componentDir)
+				.filter((name) => name.endsWith('.svelte') && name !== 'Site.svelte')
+				.filter((name) => {
+					const base = name.replace('.svelte', '');
+					// Site.svelte is the composition root, so it is referenced by a
+					// route rather than by another component.
+					return !new RegExp(`\\b${base}\\b`).test(
+						sourceText.replaceAll(readFileSync(new URL(name, componentDir), 'utf8'), '')
+					);
+				});
+			const deps = Object.keys(JSON.parse(files.pkg).dependencies ?? {});
+			const unused = deps.filter(
+				(dep) => !sourceText.includes(dep) && !files.styles.includes(dep)
+			);
+			if (orphans.length) console.log(`      orphaned: ${orphans.join(', ')}`);
+			if (unused.length) console.log(`      unused deps: ${unused.join(', ')}`);
+			return orphans.length === 0 && unused.length === 0;
+		})()
 	],
 	['Structural surfaces share the restrained radius', !/rounded-(?:3xl|2xl)/.test(sourceText)],
 	['Section rhythm avoids oversized padding', !/(?:md:)?py-32/.test(sourceText)],
@@ -98,12 +134,14 @@ const checks = [
 
 	// --------------------------------------------------------------- redesign
 	[
-		'Typography is the Geist pair, the studio faces are gone',
+		'Typography pairs Newsreader with the Geist text and mono faces',
+		files.styles.includes("'Newsreader Variable'") &&
 		files.styles.includes("'Geist Variable'") &&
 			files.styles.includes("'Geist Mono Variable'") &&
 			!sourceText.includes('bricolage') &&
 			!sourceText.includes('space-grotesk') &&
-			files.pkg.includes('@fontsource-variable/geist')
+			files.pkg.includes('@fontsource-variable/geist') &&
+			files.pkg.includes('@fontsource-variable/newsreader')
 	],
 	[
 		'The CV ships as an asset and is reachable from hero and contact',
@@ -115,14 +153,14 @@ const checks = [
 			files.cvButton.includes('download')
 	],
 	[
-		'The facts bar is gone and the scale figure is only claimed where it is shown',
+		'The hero diagram explains the platform work instead of repeating project scale',
 		!files.content.includes('stats:') &&
 			!sourceText.includes('countUp') &&
 			files.hero.includes('content.hero.positioning') &&
-			// The platform list right below carries 15.000+, 7.000 and 700 in its
-			// own column. Repeating the largest of them in the hero states a number
-			// before any evidence for it, which is the difference between saying
-			// what you do and boasting about it.
+			!files.architecturePlate.includes('15.000+') &&
+			['NetScaler', 'Citrix CVAD', 'PowerShell', 'Monitoring', 'SOPs'].every((term) =>
+				files.architecturePlate.includes(term)
+			) &&
 			!/positioning:[^\n]*15[.,]000/.test(files.content) &&
 			/scaleValue: '15\.000\+'/.test(files.content)
 	],
@@ -390,6 +428,17 @@ const checks = [
 			].some((file) => /transition:[^;]*?(\d{3,})ms/.test(file) && /[4-9]\d\dms|\d{4}ms/.test(file)) &&
 			[read('src/lib/components/CvButton.svelte'), files.contact, files.platforms].every((file) =>
 				file.includes('prefers-reduced-motion: reduce')
+			)
+	],
+	[
+		'Five restrained delight details are present and motion-safe',
+		files.architecturePlate.includes('topology-node-in') &&
+			files.hero.includes('hero-contact-arrow') &&
+			files.nav.includes('mobile-menu-panel') &&
+			files.approach.includes('approach-row') &&
+			files.contact.includes('.copy-button::after') &&
+			[files.architecturePlate, files.hero, files.nav, files.approach, files.contact].every(
+				(file) => file.includes('prefers-reduced-motion')
 			)
 	],
 

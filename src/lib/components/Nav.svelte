@@ -12,6 +12,7 @@
 	let activeId = $state('');
 	let hasScrolled = $state(false);
 	let menuButton = $state<HTMLButtonElement | null>(null);
+	let scrollSentinel = $state<HTMLSpanElement | null>(null);
 
 	const SECTION_IDS = ['platforms', 'approach', 'career', 'project', 'contact'];
 
@@ -47,9 +48,10 @@
 	}
 
 	onMount(() => {
-		const syncScrollState = () => (hasScrolled = window.scrollY > 12);
-		syncScrollState();
-		window.addEventListener('scroll', syncScrollState, { passive: true });
+		const scrollObserver = new IntersectionObserver(([entry]) => {
+			hasScrolled = !entry.isIntersecting;
+		});
+		if (scrollSentinel) scrollObserver.observe(scrollSentinel);
 
 		const sections = SECTION_IDS.map((id) => document.getElementById(id)).filter(
 			(el): el is HTMLElement => el !== null
@@ -74,12 +76,14 @@
 		sections.forEach((section) => observer.observe(section));
 		return () => {
 			observer.disconnect();
-			window.removeEventListener('scroll', syncScrollState);
+			scrollObserver.disconnect();
 		};
 	});
 </script>
 
 <svelte:window on:keydown={onKeydown} on:pointerdown={onPointerDown} />
+
+<span bind:this={scrollSentinel} class="scroll-sentinel" aria-hidden="true"></span>
 
 <header
 	class="site-header fixed inset-x-0 top-0 z-50 border-b {hasScrolled || menuOpen
@@ -92,7 +96,7 @@
 			aria-label={langState.current === 'de'
 				? 'Dennis Wiredu - zurück zum Anfang'
 				: 'Dennis Wiredu - back to top'}
-			class="group flex min-h-11 items-center font-[family-name:var(--font-display)] text-lg font-bold tracking-[-0.03em] text-ink"
+			class="group flex min-h-11 items-center font-[family-name:var(--font-display)] text-xl font-semibold tracking-[-0.035em] text-ink"
 		>
 			<span>Dennis <span class="wordmark-accent text-accent-on-paper">Wiredu</span></span>
 		</a>
@@ -163,9 +167,11 @@
 	<nav
 		id="mobile-menu"
 		aria-label={langState.current === 'de' ? 'Mobile Navigation' : 'Mobile navigation'}
-		class="site-nav-panel mx-auto max-w-6xl border-t border-b border-ink/12 bg-paper/88 px-4 py-2 backdrop-blur-2xl sm:px-6 lg:hidden {menuOpen
-			? ''
-			: 'hidden'}"
+		aria-hidden={!menuOpen}
+		inert={!menuOpen}
+		class="mobile-menu-panel site-nav-panel mx-auto max-w-6xl border-t border-b border-ink/12 bg-paper px-4 py-2 sm:px-6 lg:hidden {menuOpen
+			? 'is-open'
+			: ''}"
 	>
 		{#each links as link (link.id)}
 			<a
@@ -181,6 +187,14 @@
 </header>
 
 <style>
+	.scroll-sentinel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 13px;
+		pointer-events: none;
+	}
 	.site-header {
 		border-bottom-color: transparent;
 		background: transparent;
@@ -198,21 +212,43 @@
 		backdrop-filter: blur(16px) saturate(1.2);
 	}
 	.wordmark-accent {
-		text-decoration: underline;
-		text-decoration-color: var(--color-signal);
-		text-decoration-thickness: 0.14em;
-		text-underline-offset: 0.2em;
-		transition:
-			color 180ms ease,
-			text-decoration-color 180ms ease;
+		color: var(--color-accent-on-paper);
+		font-style: italic;
+		transition: color 180ms ease;
 	}
 	.group:hover .wordmark-accent {
 		color: var(--color-ink);
-		text-decoration-color: var(--color-accent-on-paper);
+		font-style: normal;
+	}
+	.mobile-menu-panel {
+		position: absolute;
+		top: 100%;
+		right: 0;
+		left: 0;
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transform: translateY(-10px);
+		transition:
+			opacity 180ms ease,
+			transform 220ms var(--ease-out-strong),
+			visibility 0s linear 220ms;
+	}
+	.mobile-menu-panel.is-open {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+		transform: translateY(0);
+		transition-delay: 0s;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.site-header {
 			transition: none;
+		}
+		.mobile-menu-panel,
+		.mobile-menu-panel.is-open {
+			transform: none;
+			transition-property: opacity, visibility;
 		}
 	}
 </style>
