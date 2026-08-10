@@ -42,7 +42,6 @@
 	<div class="relative mx-auto max-w-6xl">
 		<div class="career-intro-grid">
 			<div>
-				<p class="figure mb-5 text-sm text-accent-on-paper">03</p>
 				<h2 use:reveal class="section-head text-ink">
 					{content.career.title}
 				</h2>
@@ -77,7 +76,6 @@
 					>
 						{#if isPhaseStart}
 							<p class="phase-label meta" data-phase={station.track}>
-								<span>{station.track === 'commercial' ? '01' : '02'}</span>
 								{phaseLabel(station.track)}
 							</p>
 						{/if}
@@ -99,7 +97,7 @@
 							<div class="station-grid">
 								<div class="station-time">
 									<span class="station-year figure text-accent-on-paper">{station.year}</span>
-									<span class="meta mt-1 block text-ink-faint">{station.period}</span>
+									<span class="figure mt-1 block text-sm text-ink-faint">{station.period}</span>
 								</div>
 
 								<div class="station-copy">
@@ -199,7 +197,6 @@
 		background: color-mix(in srgb, var(--color-ink) 18%, transparent);
 	}
 
-	.phase-label span,
 	.phase-label[data-phase='it'] {
 		color: var(--color-accent-on-paper);
 	}

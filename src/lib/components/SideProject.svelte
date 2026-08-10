@@ -10,7 +10,7 @@
 	<div class="mx-auto max-w-6xl border border-ink/15 bg-paper-raised px-6 py-16 sm:px-10 md:py-20">
 		<div class="grid items-center gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14">
 			<div use:reveal>
-				<p class="meta flex items-center gap-3 text-ink-faint"><span class="figure text-accent-on-paper">04</span> {content.project.title}</p>
+				<p class="meta text-ink-faint">{content.project.title}</p>
 				<h2
 					class="mt-3 font-[family-name:var(--font-display)] text-[clamp(2.7rem,5vw,4rem)] leading-none font-medium tracking-[-0.045em] text-ink"
 				>

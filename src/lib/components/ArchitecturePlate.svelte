@@ -37,13 +37,11 @@
 <aside class="plate" aria-label={labels.title}>
 	<div class="plate-head">
 		<span class="meta">{labels.title}</span>
-		<span class="plate-index meta">DW / 01</span>
 	</div>
 
 	<ol class="system-flow" aria-label={labels.title}>
 		{#each labels.nodes as node, i (node.name)}
 			<li class:is-core={i === 1}>
-				<span class="node-index figure">0{i + 1}</span>
 				<span class="meta node-label">{node.label}</span>
 				<strong>{node.name}</strong>
 				<span class="meta node-detail">{node.detail}</span>
@@ -57,8 +55,8 @@
 			<strong>{labels.orchestration}</strong>
 		</div>
 		<ol class="automation-steps meta">
-			{#each labels.steps as step, i (step)}
-				<li><span class="figure">0{i + 1}</span>{step}</li>
+			{#each labels.steps as step (step)}
+				<li>{step}</li>
 			{/each}
 		</ol>
 	</div>
@@ -66,9 +64,8 @@
 	<div class="operations-block">
 		<span class="meta operations-label">{labels.operations}</span>
 		<ol>
-			{#each labels.operationSteps as step, i (step)}
+			{#each labels.operationSteps as step (step)}
 				<li>
-					<span class="figure">0{i + 1}</span>
 					<strong>{step}</strong>
 				</li>
 			{/each}
@@ -108,7 +105,6 @@
 		gap: 1.5rem;
 	}
 
-	.plate-index,
 	.plate-foot .meta {
 		color: var(--color-ink-faint);
 	}
@@ -149,14 +145,6 @@
 		border-top-width: 3px;
 		border-top-color: var(--color-accent-on-paper);
 		background: color-mix(in srgb, var(--color-accent-on-paper) 6%, transparent);
-	}
-
-	.node-index {
-		position: absolute;
-		top: 0.7rem;
-		right: 0.7rem;
-		font-size: 0.8rem;
-		color: var(--color-accent-on-paper);
 	}
 
 	.node-label,
@@ -216,10 +204,6 @@
 		border-left: 1px solid color-mix(in srgb, var(--color-on-signal) 35%, transparent);
 	}
 
-	.automation-steps .figure {
-		opacity: 0.65;
-	}
-
 	.operations-block {
 		display: grid;
 		grid-template-columns: minmax(5.5rem, 0.36fr) 1fr;
@@ -248,11 +232,6 @@
 	.operations-block li:not(:first-child) {
 		padding-left: 0.6rem;
 		border-left: 1px solid var(--color-line);
-	}
-
-	.operations-block .figure {
-		font-size: 0.72rem;
-		color: var(--color-accent-on-paper);
 	}
 
 	.operations-block strong {

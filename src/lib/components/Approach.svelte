@@ -12,7 +12,6 @@
 -->
 <section id="approach" class="relative px-4 py-4 sm:px-6">
 	<div class="mx-auto max-w-6xl bg-paper-raised px-6 py-16 sm:px-10 md:py-20">
-		<p class="figure mb-5 text-sm text-accent-on-paper">02</p>
 		<h2 use:reveal class="section-head-quiet text-ink">
 			{content.approach.title}
 		</h2>
@@ -29,7 +28,6 @@
 		<div class="mt-10 border-t border-ink/15">
 			{#each content.approach.items as item, i (item.title)}
 				<div use:reveal={i * 80} class="approach-row grid border-b border-ink/15 py-8 md:grid-cols-[5rem_0.8fr_1.2fr] md:gap-8 md:py-10">
-					<span class="approach-index figure text-sm text-accent-on-paper">0{i + 1}</span>
 					<h3 class="approach-title mt-3 max-w-[20ch] font-[family-name:var(--font-display)] text-2xl leading-[1.08] font-medium text-ink md:mt-0 md:text-3xl">
 						{item.title}
 					</h3>
@@ -51,7 +49,6 @@
 </section>
 
 <style>
-	.approach-index,
 	.approach-title,
 	.approach-tool {
 		transition:
@@ -61,10 +58,6 @@
 	}
 
 	@media (hover: hover) and (pointer: fine) {
-		.approach-row:hover .approach-index {
-			transform: translateX(5px);
-		}
-
 		.approach-row:hover .approach-title {
 			transform: translateX(3px);
 			color: var(--color-accent-on-paper);
@@ -76,13 +69,11 @@
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.approach-index,
 		.approach-title,
 		.approach-tool {
 			transition-property: border-color, color;
 		}
 
-		.approach-row:hover .approach-index,
 		.approach-row:hover .approach-title {
 			transform: none;
 		}

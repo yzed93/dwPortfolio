@@ -278,11 +278,39 @@ const checks = [
 			!/h-1 w-1 shrink-0 rounded-full/.test(sourceText)
 	],
 	[
-		'Figures are set in mono so the sizes read as a column',
-		files.styles.includes('.figure {') &&
-			files.styles.includes('font-variant-numeric: tabular-nums') &&
-			files.platforms.includes('figure') &&
-			files.caseStudy.includes('figure')
+		'Figures are written, labels are machine-set, and both stay in columns',
+		/*
+			The split is the point. `meta` labels machinery and stays monospaced;
+			`figure` covers dates, years and scale, which a person wrote about
+			themselves, and those are set in the display italic. Tabular numerals
+			are non-negotiable on both, because each of them stacks into a column
+			somewhere and proportional digits would let the column drift.
+		*/
+		/\.figure \{[^}]*font-family: var\(--font-display\)/.test(files.styles) &&
+			/\.figure \{[^}]*font-style: italic/.test(files.styles) &&
+			/\.figure \{[^}]*tabular-nums/.test(files.styles) &&
+			/\.meta \{[^}]*font-family: var\(--font-mono\)/.test(files.styles) &&
+			files.styles.includes('newsreader/opsz-italic.css') &&
+			// Dates belong to the written side, not the machine side.
+			files.platforms.includes('figure text-sm text-ink-faint">{platform.period}') &&
+			files.careerAxis.includes('{station.period}')
+	],
+	[
+		'No section or step numbering anywhere',
+		/*
+			"If the user can count, they do not need the label." Numbered eyebrows
+			above headings, numbered steps inside the diagram and a numbered phase
+			marker on the axis are all the same tell.
+
+			This looks for the rendered pair of digits rather than for one markup
+			shape. The first version of this check only knew about literals inside
+			a `figure` span and passed while `{track === 'commercial' ? '01' : '02'}`
+			was still on the page.
+		*/
+		!/['">]0[1-9]['"<]/.test(
+			[files.hero, files.platforms, files.approach, files.careerAxis, files.sideProject,
+			 files.contact, files.architecturePlate, files.caseStudy].join('\n')
+		)
 	],
 	[
 		'Only the hero role uses an uppercase micro-label',

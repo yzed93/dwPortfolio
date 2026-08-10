@@ -3,6 +3,12 @@
 @import '@fontsource-variable/geist';
 @import '@fontsource-variable/geist-mono';
 @import '@fontsource-variable/newsreader';
+/*
+	The italic is a separate file and was never pulled in. It carries the
+	calligraphic forms the roman does not, which is what makes it the right
+	face for dates and figures: written rather than measured.
+*/
+@import '@fontsource-variable/newsreader/opsz-italic.css';
 
 /*
 	The site uses one light editorial palette. The legacy `/light` comparison
@@ -153,11 +159,27 @@ html {
 	letter-spacing: 0.01em;
 }
 
+/*
+	Numbers are set in the italic of the display serif, not in the mono.
+
+	The split is deliberate: `meta` stays monospaced because it labels
+	machinery, and product names reading as machine-set is correct. `figure`
+	covers what a person wrote down about themselves, dates and durations and
+	scale, and a monospaced grid gives those the look of console output. The
+	italic has the pen in it.
+
+	Tabular figures stay on, because these numbers stack into columns on the
+	platform list and the career axis, and proportional digits would make the
+	columns drift.
+*/
 .figure {
-	font-family: var(--font-mono);
+	font-family: var(--font-display);
+	font-style: italic;
 	font-variant-numeric: tabular-nums;
 	font-weight: 500;
-	letter-spacing: -0.03em;
+	letter-spacing: 0;
+	/* The italic sits optically small next to the sans at the same size. */
+	font-size: 1.06em;
 }
 
 /*

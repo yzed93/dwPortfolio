@@ -29,7 +29,6 @@
 	overview stays scannable, the depth lives one click away.
 -->
 <section id="platforms" class="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
-	<p class="figure mb-5 text-sm text-accent-on-paper">01</p>
 	<h2 use:reveal class="section-head text-ink">
 		{content.platforms.title}
 	</h2>
@@ -71,7 +70,7 @@
 					</div>
 
 					<div class="flex items-center gap-4 md:flex-col md:items-end md:gap-2">
-						<span class="meta text-ink-faint">{platform.period}</span>
+						<span class="figure text-sm text-ink-faint">{platform.period}</span>
 						<span
 							class="platform-arrow text-accent-on-paper transition-transform"
 							aria-hidden="true"

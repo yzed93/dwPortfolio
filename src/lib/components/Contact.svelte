@@ -64,7 +64,6 @@
 <section id="contact" class="mx-auto max-w-6xl px-4 py-16 sm:px-6 md:py-24">
 	<div use:reveal class="grid gap-10 border-t border-ink/15 pt-10 lg:grid-cols-[1fr_0.62fr] lg:gap-16">
 		<div>
-			<p class="figure mb-5 text-sm text-accent-on-paper">05</p>
 			<h2 class="section-head text-ink">{content.contact.title}</h2>
 			<p class="mt-4 max-w-[44ch] leading-relaxed text-ink-soft">{content.contact.intro}</p>
 
