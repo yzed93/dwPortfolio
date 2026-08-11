@@ -25,9 +25,15 @@
 			passes through: automate it, design how it will be run, hand it over.
 			A vertical sequence says that; a row of cards says "pick one".
 		-->
+		<!--
+			Two tracks for two children. The row used to carry a leading number in a
+			5rem column; when the numbering went the track stayed behind, so the
+			heading was squeezed into 80px, broke one word per line and collided
+			with the body text beside it.
+		-->
 		<div class="mt-10 border-t border-ink/15">
 			{#each content.approach.items as item, i (item.title)}
-				<div use:reveal={i * 80} class="approach-row grid border-b border-ink/15 py-8 md:grid-cols-[5rem_0.8fr_1.2fr] md:gap-8 md:py-10">
+				<div use:reveal={i * 80} class="approach-row grid border-b border-ink/15 py-8 md:grid-cols-[0.8fr_1.2fr] md:gap-8 md:py-10">
 					<h3 class="approach-title mt-3 max-w-[20ch] font-[family-name:var(--font-display)] text-2xl leading-[1.08] font-medium text-ink md:mt-0 md:text-3xl">
 						{item.title}
 					</h3>
