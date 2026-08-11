@@ -341,7 +341,13 @@
 		display: block;
 		margin: 0.3rem 0 0.45rem;
 		font-family: var(--font-display);
-		font-size: clamp(1rem, 2vw, 1.45rem);
+		/*
+			1.75vw and not 2vw: at exactly the width where the hero splits into two
+			columns the node cell is at its narrowest, 80px of usable width, and
+			"NetScaler" is one unbreakable word that wanted 85 of them. The 1.45rem
+			cap still governs from 1325px up, so the desktop size is unchanged.
+		*/
+		font-size: clamp(1rem, 1.75vw, 1.45rem);
 		font-weight: 600;
 		line-height: 1;
 		letter-spacing: -0.025em;

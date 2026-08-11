@@ -159,7 +159,14 @@
 		align-items: center;
 		margin: 0;
 		font-family: var(--font-mono);
-		font-size: clamp(2.5rem, 9vw, 7rem);
+		/*
+			8.5vw and not 9vw: between the two-column breakpoint and roughly 880px
+			this pair shares its row with the intro text, and at 9vw the figures
+			needed 372px of a 362px box. `white-space: nowrap` means they cannot
+			give, so they overflowed instead. Above 1315px the 7rem cap takes over
+			and nothing about the desktop size changes.
+		*/
+		font-size: clamp(2.5rem, 8.5vw, 7rem);
 		font-variant-numeric: tabular-nums;
 		font-weight: 500;
 		line-height: 0.8;
