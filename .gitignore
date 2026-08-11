@@ -24,3 +24,14 @@ vite.config.ts.timestamp-*
 
 # Verification screenshots from agent runs
 /portfolio-*.png
+
+# Local tooling and editor config, not part of the site
+/.claude
+/.vscode
+/.playwright-mcp
+/.github/agents
+/.github/hooks
+/.github/skills
+
+# Registry config, may carry a token
+/.npmrc
