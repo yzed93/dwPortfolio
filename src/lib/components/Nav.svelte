@@ -244,7 +244,7 @@
 			<button
 				type="button"
 				onclick={() => langState.toggle()}
-				class="meta flex h-10 min-w-10 items-center justify-center px-2 font-medium text-ink transition-colors hover:text-accent-on-paper active:scale-[0.98]"
+				class="meta flex h-11 min-w-11 items-center justify-center px-2 font-medium text-ink transition-colors hover:text-accent-on-paper active:scale-[0.98]"
 				aria-label={langState.current === 'de' ? 'Switch to English' : 'Auf Deutsch wechseln'}
 			>
 				{langState.current === 'de' ? 'EN' : 'DE'}
@@ -263,7 +263,7 @@
 					: menuOpen
 						? 'Close menu'
 						: 'Open menu'}
-				class="flex h-10 w-10 items-center justify-center text-ink transition-colors hover:text-accent-on-paper active:scale-[0.98] lg:hidden"
+				class="flex h-11 w-11 items-center justify-center text-ink transition-colors hover:text-accent-on-paper active:scale-[0.98] lg:hidden"
 			>
 				{#if menuOpen}
 					<X size={20} weight="bold" />

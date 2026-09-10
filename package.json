@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
+		"private:encrypt": "node scripts/encrypt-private.mjs",
 		"build": "vite build",
 		"preview": "vite preview",
 		"test:taste": "node scripts/taste-check.mjs",

@@ -42,7 +42,8 @@
 	--color-paper-raised: #e8e3d8;
 	--color-ink: #191b19;
 	--color-ink-soft: #50534f;
-	--color-ink-faint: #777b75;
+	/* Clears 4.5:1 even on the darker raised-paper surface at small meta sizes. */
+	--color-ink-faint: #626660;
 	--color-line: #cbc6ba;
 
 	/* Cobalt is the only accent; white text gives the filled CTA 7.2:1 contrast. */
@@ -60,7 +61,7 @@
 	--color-card-border: #cbc6ba;
 	--color-card-ink: #191b19;
 	--color-card-ink-soft: #50534f;
-	--color-card-ink-faint: #777b75;
+	--color-card-ink-faint: #626660;
 	--color-card-accent: #3157c8;
 	--color-card-line: #cbc6ba;
 }
@@ -70,7 +71,7 @@
 	--color-paper-raised: #e8e3d8;
 	--color-ink: #191b19;
 	--color-ink-soft: #50534f;
-	--color-ink-faint: #777b75;
+	--color-ink-faint: #626660;
 	--color-line: #cbc6ba;
 
 	--color-accent-on-paper: #3157c8;
@@ -80,13 +81,16 @@
 	--color-card-border: #cbc6ba;
 	--color-card-ink: #191b19;
 	--color-card-ink-soft: #50534f;
-	--color-card-ink-faint: #777b75;
+	--color-card-ink-faint: #626660;
 	--color-card-accent: #3157c8;
 	--color-card-line: #cbc6ba;
 }
 
 html {
 	color-scheme: light;
+	scrollbar-color: color-mix(in srgb, var(--color-ink) 34%, transparent)
+		var(--color-paper-raised);
+	scrollbar-width: thin;
 }
 
 html[data-theme='light'] {
@@ -105,6 +109,30 @@ body {
 	color: var(--color-ink);
 	font-family: var(--font-sans);
 	-webkit-font-smoothing: antialiased;
+}
+
+::selection {
+	background: color-mix(in srgb, var(--color-signal) 24%, var(--color-paper));
+	color: var(--color-ink);
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--color-paper-raised);
+}
+
+::-webkit-scrollbar-thumb {
+	border: 3px solid var(--color-paper-raised);
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--color-ink) 34%, transparent);
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: color-mix(in srgb, var(--color-ink) 52%, transparent);
 }
 
 h1,
