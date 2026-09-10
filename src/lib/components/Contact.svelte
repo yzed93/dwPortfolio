@@ -71,7 +71,7 @@
 				<a
 					bind:this={mailLink}
 					href="mailto:{content.contact.email}"
-					class="contact-mail max-w-full break-words font-[family-name:var(--font-display)] text-[clamp(1.35rem,4vw,2.5rem)] leading-tight font-semibold text-accent-on-paper transition-colors"
+					class="contact-mail inline-flex min-h-11 max-w-full items-center break-words font-[family-name:var(--font-display)] text-[clamp(1.35rem,4vw,2.5rem)] leading-tight font-semibold text-accent-on-paper transition-colors"
 				>
 					{content.contact.email}
 				</a>
