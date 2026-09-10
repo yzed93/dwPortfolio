@@ -35,3 +35,7 @@ vite.config.ts.timestamp-*
 
 # Registry config, may carry a token
 /.npmrc
+
+# Private source and password: never commit or publish
+/.private/
+/.impeccable/review/
